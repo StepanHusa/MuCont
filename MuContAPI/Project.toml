@@ -1,0 +1,19 @@
+name = "MuContAPI"
+uuid = "ac03c428-f365-412d-8d2c-3cfa3d5d7348"
+authors = ["Stepan Husa <stepan.husa@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
+JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
+Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
+LoggingExtras = "e6f89c97-d47a-5376-807f-9c37f3926c36"
+MuCont = "e6b9a4a2-e8b5-4566-bb93-405dcfda20a8"
+PackageCompiler = "9b87118b-4619-50d2-8e1e-99f35a4d4d9d"
+
+[compat]
+HTTP = "1.10.15"
+JSON3 = "1.14.1"
+Logging = "1.11.0"
+LoggingExtras = "1.1.0"
+PackageCompiler = "2.2.0"

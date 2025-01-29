@@ -1,0 +1,23 @@
+<Application
+    x:Class="MuCont.Desktop.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dock="using:MuCont.Desktop.DockingUtilities"
+    xmlns:local="using:MuCont.Desktop"
+    RequestedThemeVariant="Default">
+    <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
+
+
+    <Application.Styles>
+        <FluentTheme />
+
+        <!--  Some Oxy style is needed for PlotView to be visible  -->
+        <StyleInclude Source="avares://OxyPlot.Avalonia/Themes/Default.axaml" />
+
+    </Application.Styles>
+
+    <!--  This is important for DockFactory  -->
+    <Application.DataTemplates>
+        <dock:ViewLocator />
+    </Application.DataTemplates>
+</Application>

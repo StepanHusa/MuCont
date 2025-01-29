@@ -1,0 +1,9 @@
+pip install julia
+pip install PyQt5
+pip install cx_Freeze
+
+
+in julia:
+using Pkg
+ENV["PYTHON"] = "C:\\Users\\stepanhusa\\AppData\\Local\\Programs\\Python\\Python311\\python.exe"  # Change to your preferred version
+Pkg.build("PyCall")

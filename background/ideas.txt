@@ -1,0 +1,15 @@
+RootFolder/
+├── System1/
+│   ├── info.json            # Metadata about the system
+│   ├── equations.txt        # Differential equations (as strings)
+│   ├── Diagrams/            # Folder for computed diagrams
+│   │   ├── Diagram1/        # Specific diagram folder
+│   │   │   ├── data.csv     # Computed data for the diagram
+│   │   │   ├── config.json  # Optional diagram configuration
+│   │   ├── Diagram2/
+│   ├── Logs/                # Optional log folder for history/traces
+├── System2/
+│   ├── info.json
+│   ├── equations.txt
+│   ├── Diagrams/
+│   ├── Logs/
