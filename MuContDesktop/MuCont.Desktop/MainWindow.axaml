@@ -6,11 +6,39 @@
     xmlns:ids="using:Dock.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="using:MuCont.Desktop.Views"
+    xmlns:vm="using:MuCont.Desktop.ViewModels"
     Title="MuCont 100"
     d:DesignHeight="450"
     d:DesignWidth="800"
     ids:DockProperties.IsDragEnabled="True"
     ids:DockProperties.IsDropEnabled="True"
+    x:DataType="vm:MainWindowViewModel"
     mc:Ignorable="d">
-    <views:MainView />
+
+    <Grid>
+        <views:MainView DataContext="{Binding MainViewModelProp}" />
+
+        <Border
+            Name="Overlay"
+            d:IsVisible="False"
+            Background="#80000000"
+            IsVisible="{Binding IsOverlayVisible}"
+            ZIndex="1">
+
+            <Grid>
+                <Border
+                    MaxWidth="400"
+                    MaxHeight="300"
+                    Padding="20"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="White"
+                    CornerRadius="10">
+                    <ContentControl Content="{Binding CurrentOverlayView}" />
+                </Border>
+            </Grid>
+        </Border>
+
+
+    </Grid>
 </Window>

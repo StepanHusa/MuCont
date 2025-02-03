@@ -1,4 +1,6 @@
 ﻿using Avalonia.Controls;
+using MuCont.Desktop.Dialogs;
+using MuCont.Desktop.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,34 +8,46 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MuCont.Desktop.Services;
-public class DialogService :IDialogService
+public class DialogService : IDialogService
 {
-    private readonly Window _mainWindow;
+    private readonly MainWindowViewModel mainWM;
     private readonly IServiceProvider serviceProvider;
 
-    public DialogService(MainWindow mainWindow, IServiceProvider serviceProvider)
+    public DialogService(MainWindowViewModel mainWM, IServiceProvider serviceProvider)
     {
-        _mainWindow = mainWindow;
+        this.mainWM = mainWM;
         this.serviceProvider = serviceProvider;
     }
 
     public async Task<TResult?> ShowDialogAsync<TView, TViewModel, TResult>()
         where TView : UserControl, new()
-        where TViewModel : class
+        where TViewModel : class, IDialogViewModel<TResult>
     {
         var viewModel = serviceProvider.GetService(typeof(TViewModel)) as TViewModel;
 
-        var dialogWindow = new Window
+        if (viewModel == null)
         {
-            Width = 400,
-            Height = 300,
-            Content = new TView
-            {
-                DataContext = viewModel
-            }
+            throw new InvalidOperationException($"Unable to resolve ViewModel of type {typeof(TViewModel).Name}.");
+        }
+
+        var view = new TView
+        {
+            DataContext = viewModel
         };
 
-        return await dialogWindow.ShowDialog<TResult?>(_mainWindow);
+        mainWM.ShowOverlay(view);
+
+        var tcs = new TaskCompletionSource<TResult?>();
+
+        var overlayViewModel = viewModel as IDialogViewModel<TResult>;
+
+        overlayViewModel.OnClose = result =>
+        {
+            mainWM.HideOverlay();
+            tcs.SetResult(result);
+        };
+
+        return await tcs.Task;
     }
 }
 

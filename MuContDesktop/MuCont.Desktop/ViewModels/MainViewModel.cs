@@ -10,11 +10,13 @@ using MuCont.Desktop.ViewModels.Dockable;
 using MuCont.Desktop.ViewModels.Dockable.Plots;
 using MuCont.Desktop.Views;
 using Prism.Events;
+using ReactiveUI;
 using System;
+using System.Reactive;
 using System.Threading.Tasks;
 
 namespace MuCont.Desktop.ViewModels;
-internal partial class MainViewModel : ObservableObject
+public partial class MainViewModel : ObservableObject
 {
     private readonly IDockFactory? _factory;
     private readonly IEventAggregator ea;
@@ -54,7 +56,7 @@ internal partial class MainViewModel : ObservableObject
     [RelayCommand]
     private async Task OnOpenSettingsAsync()
     {
-        await dialogService.ShowDialogAsync<SettingsView, SettingsViewModel, object>();
+        await dialogService.ShowDialogAsync<SettingsView, SettingsViewModel, bool>();
     }
 
     [RelayCommand]

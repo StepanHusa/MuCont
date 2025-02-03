@@ -36,28 +36,44 @@ namespace MuCont.Desktop
                         // Set up DI
                         _serviceProvider = Startup.ConfigureServices();
 
-                        var mainWindowViewModel = _serviceProvider.GetService<MainViewModel>();
+                        var mainWindowViewModel = _serviceProvider.GetService<MainWindowViewModel>();
+                        var mainViewModel = _serviceProvider.GetService<MainViewModel>(); // the singleton of VeiwModel Containing possible undocked windows
+
 
                         if (mainWindowViewModel is null)
                         {
+                            throw new InvalidOperationException("MainWindowViewModel is not registered in the service provider");
+                        }
+
+                        if (mainViewModel is null)
+                        {
                             throw new InvalidOperationException("MainViewModel is not registered in the service provider");
                         }
+
+                        mainWindowViewModel.MainViewModelProp = mainViewModel; //This is here because mainViewModel depends on dialogService which back depends on mainWindowViewModel
 
                         var mainWindow = new MainWindow
                         {
                             DataContext = mainWindowViewModel
                         };
 
+                        
+
+
                         mainWindow.Closing += (_, _) =>
                         {
-                            mainWindowViewModel.CloseLayout();
+
+                                mainViewModel.CloseLayout();
+
                         };
 
                         desktopLifetime.MainWindow = mainWindow;
 
                         desktopLifetime.Exit += (_, _) =>
                         {
-                            mainWindowViewModel.CloseLayout();
+
+                                mainViewModel.CloseLayout();
+
                         };
 
                         break;

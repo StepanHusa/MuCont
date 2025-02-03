@@ -27,8 +27,11 @@ public static class Startup
 
         services.AddSingleton<IEventAggregator, EventAggregator>();
 
-        //The window
+        //The window (Only one main window)
         services.AddTransient<MainWindow>();
+        //services.AddSingleton<MainWindow>();
+        services.AddSingleton<MainWindowViewModel>();
+
 
         //ViewModels
         services.AddSingleton<MainViewModel>();

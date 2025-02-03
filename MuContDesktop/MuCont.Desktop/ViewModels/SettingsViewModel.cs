@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using MuCont.Desktop.Dialogs;
 using ReactiveUI;
 using System;
 using System.IO;
@@ -10,7 +13,7 @@ using System.Text.Json;
 namespace MuCont.Desktop.ViewModels;
 
 
-public class SettingsViewModel : ReactiveObject
+public partial class SettingsViewModel : ObservableObject, IDialogViewModel<bool>
 {
     private readonly IOptions<AppSettings> _options;
     private readonly IConfiguration _configuration;
@@ -19,7 +22,18 @@ public class SettingsViewModel : ReactiveObject
     public int WindowWidth { get; set; }
     public int WindowHeight { get; set; }
 
-    public ReactiveCommand<Unit, Unit> SaveCommand { get; }
+    [RelayCommand]
+    public void OnSave()
+    {
+        SaveSettings();
+        OnClose(true);
+    }
+
+    [RelayCommand] 
+    public void OnCancel()
+    {
+        OnClose(false);
+    }
 
     public SettingsViewModel(IOptions<AppSettings> options, IConfiguration configuration)
     {
@@ -30,8 +44,6 @@ public class SettingsViewModel : ReactiveObject
         SelectedTheme = settings.Theme;
         WindowWidth = settings.WindowWidth;
         WindowHeight = settings.WindowHeight;
-
-        SaveCommand = ReactiveCommand.Create(SaveSettings);
     }
 
     private void SaveSettings()
@@ -51,4 +63,7 @@ public class SettingsViewModel : ReactiveObject
         };
         File.WriteAllText(settingsPath, JsonSerializer.Serialize(updatedSettings, new JsonSerializerOptions { WriteIndented = true }));
     }
+
+    public Action<bool> OnClose { get; set; } = _ => { };
+
 }

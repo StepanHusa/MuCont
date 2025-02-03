@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using MuCont.Desktop.ViewModels;
 
 namespace MuCont.Desktop
 {
@@ -8,5 +9,6 @@ namespace MuCont.Desktop
         {
             InitializeComponent();
         }
+
     }
 }

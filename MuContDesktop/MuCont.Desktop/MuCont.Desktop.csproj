@@ -43,10 +43,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Models\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <ProjectReference Include="..\MuCont.ComputationInterface\MuCont.ComputationInterface.csproj" />
 	</ItemGroup>
 </Project>
