@@ -1,4 +1,5 @@
 using Plots
+using LinearAlgebra
 
 import MuCont as cont
 
@@ -32,11 +33,15 @@ function fun_jacobi(kmrgd,par_a)
     a = par_a[1]
     b = par_a[2]
 
-    J = zeros(2, 2)
-    J[1, 1] = 2*x
-    J[1, 2] = 0
-    J[2, 1] = 0
-    J[2, 2] = -1
+    J = zeros(2, 4)  # 2 equations, 2 variables + 2 parameters
+    J[1, 1] = 2*x   # ∂xdot/∂x
+    J[1, 2] = 0     # ∂xdot/∂y
+    J[1, 3] = 1     # ∂xdot/∂a
+    J[1, 4] = 0     # ∂xdot/∂b
+    J[2, 1] = 0     # ∂ydot/∂x
+    J[2, 2] = -1    # ∂ydot/∂y
+    J[2, 3] = 0     # ∂ydot/∂a
+    J[2, 4] = 0     # ∂ydot/∂b
 
     return J
 
@@ -96,16 +101,42 @@ function integrate_euler(fun, initials, params, tspan)
 end
 
 
-function continuate(fun_eval, fun_jacobi, initials, params, npoints)
+function continuate(f, J, initials, npoints)
     x0 = initials
 
-    stepsize = 0.01
+    stepsize = 0.1
+    direction = initDirection(f, J, initials)
 
-    J = fun_jacobi(x0, params)
-    f = fun_eval(0, x0, params)
+    x = []
 
+    for i in 1:npoints
+        x1 = x0 + stepsize * direction
 
+        x2 = x1 - J(x1)\f(x1) # newton correction
+        # there could be a second correction
+
+        push!(x, x2)
+
+        x0 = x2        
+    end
+
+    return x
+end
+
+function NewtonCorrection(f, J, x)
+    return x - J(x)\f(x)
+end
+
+function initDirection(fun_eval, fun_jacobi, initials)
     
+x = [];
+v = [];
 
 
+J = fun_jacobi(initials) # a 2x3 matrix computed from the variables and one free parameter
+
+v = nullspace(J)
+v = vec(v)
+
+return normalize(v)
 end
