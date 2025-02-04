@@ -27,13 +27,11 @@
 
             <Grid>
                 <Border
-                    MaxWidth="400"
-                    MaxHeight="300"
                     Padding="20"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Background="White"
-                    CornerRadius="10">
+                    CornerRadius="3">
                     <ContentControl Content="{Binding CurrentOverlayView}" />
                 </Border>
             </Grid>

@@ -37,6 +37,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Dialogs\Views\NewSystemDialogView.axaml.cs">
+	    <DependentUpon>NewSystemDialogView.axaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Dialogs\Views\SettingsDialogView.axaml.cs">
+	    <DependentUpon>SettingsDialogView.axaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\Dockable\Plots\PlotView.axaml.cs">
 	    <DependentUpon>PlotView.axaml</DependentUpon>
 	  </Compile>
@@ -44,5 +50,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\MuCont.ComputationInterface\MuCont.ComputationInterface.csproj" />
+	  <ProjectReference Include="..\MuCont.Desktop.FormsGenerator\MuCont.Desktop.FormsGenerator.csproj" />
 	</ItemGroup>
 </Project>

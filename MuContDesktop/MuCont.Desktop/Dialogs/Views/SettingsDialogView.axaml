@@ -1,13 +1,13 @@
 <UserControl
-    x:Class="MuCont.Desktop.Views.SettingsView"
+    x:Class="MuCont.Desktop.Views.SettingsDialogView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="using:MuCont.Desktop.ViewModels"
+    xmlns:vm="using:MuCont.Desktop.Dialogs.ViewModels"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    x:DataType="vm:SettingsViewModel"
+    x:DataType="vm:SettingsDialogViewModel"
     mc:Ignorable="d">
     <StackPanel Margin="10">
         <TextBlock

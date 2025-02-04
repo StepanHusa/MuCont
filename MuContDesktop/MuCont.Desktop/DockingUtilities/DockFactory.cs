@@ -3,6 +3,7 @@ using Dock.Model.Controls;
 using Dock.Model.Core;
 using Dock.Model.Mvvm;
 using Dock.Model.Mvvm.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using MuCont.Desktop.ViewModels;
 using MuCont.Desktop.ViewModels.Dockable;
 using MuCont.Desktop.ViewModels.Dockable.Plots;
@@ -11,39 +12,53 @@ using System.Collections.Generic;
 
 namespace MuCont.Desktop.DockingUtilities;
 
-public class DockFactory : Factory, IDockFactory
+internal class DockFactory : Factory, IDockFactory
 {
-    private readonly object _context;
+    private readonly DockingContext _context;
+    private readonly IServiceProvider serviceProvider;
     private IRootDock? _rootDock;
     private IDock? _centralDock;
 
-    public DockFactory(object context)
+    public DockFactory(DockingContext context, IServiceProvider serviceProvider)
     {
         _context = context;
+        this.serviceProvider = serviceProvider;
     }
 
     //public override IDocumentDock CreateDocumentDock() => new CustomDocumentDock();
 
     public override IRootDock CreateLayout()
     {
+        var plot1 = serviceProvider.GetRequiredService<PlotViewModel>();
+        plot1.Id = "Plot1";
+        plot1.Title = "Plot1";
+        plot1.CanClose = true;
 
-        var plot1 = new PlotViewModel { Id = "Plot1", Title = "Plot1", CanClose = true };
-        var plot2 = new PlotViewModel { Id = "Plot2", Title = "Plot2", CanClose = true };
+        var plot2 = serviceProvider.GetRequiredService<PlotViewModel>();
+        plot2.Id = "Plot2";
+        plot2.Title = "Plot2";
+        plot2.CanClose = true;
 
-        var starter = new StarterViewModel { Id = "Starter", Title = "Starter" };
+        var starter = serviceProvider.GetRequiredService<StarterViewModel>();
+        starter.Id = "Starter";
+        starter.Title = "Starter";
+
+        var systems = serviceProvider.GetRequiredService<SystemsViewModel>();
+        systems.Id = "Systems";
+        systems.Title = "Systems";
 
 
         var leftDock = new ProportionalDock
         {
             Proportion = 0.25,
             Orientation = Orientation.Vertical,
-            ActiveDockable = null,
+            ActiveDockable = systems,
             VisibleDockables = CreateList<IDockable>
             (
                 new ToolDock
                 {
                     ActiveDockable = starter,
-                    VisibleDockables = CreateList<IDockable>(),
+                    VisibleDockables = CreateList<IDockable>(systems,starter),
                     Alignment = Alignment.Left
                 },
                 new ProportionalDockSplitter()

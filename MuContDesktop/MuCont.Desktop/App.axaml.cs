@@ -57,8 +57,7 @@ namespace MuCont.Desktop
                             DataContext = mainWindowViewModel
                         };
 
-                        
-
+                        mainViewModel.LoadDockLayout();
 
                         mainWindow.Closing += (_, _) =>
                         {

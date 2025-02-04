@@ -2,18 +2,15 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using MuCont.Desktop.Dialogs;
-using ReactiveUI;
 using System;
 using System.IO;
-using System.Reactive;
 using System.Text.Json;
 
 
-namespace MuCont.Desktop.ViewModels;
+namespace MuCont.Desktop.Dialogs.ViewModels;
 
 
-public partial class SettingsViewModel : ObservableObject, IDialogViewModel<bool>
+public partial class SettingsDialogViewModel : ObservableObject, IDialogViewModel<bool>
 {
     private readonly IOptions<AppSettings> _options;
     private readonly IConfiguration _configuration;
@@ -29,13 +26,13 @@ public partial class SettingsViewModel : ObservableObject, IDialogViewModel<bool
         OnClose(true);
     }
 
-    [RelayCommand] 
+    [RelayCommand]
     public void OnCancel()
     {
         OnClose(false);
     }
 
-    public SettingsViewModel(IOptions<AppSettings> options, IConfiguration configuration)
+    public SettingsDialogViewModel(IOptions<AppSettings> options, IConfiguration configuration)
     {
         _options = options;
         _configuration = configuration;

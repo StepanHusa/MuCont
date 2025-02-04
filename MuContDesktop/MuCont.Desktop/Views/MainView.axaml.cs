@@ -12,8 +12,8 @@ public partial class MainView : UserControl
         InitializeComponent();
         InitializeThemes();
         InitializeMenu();
-
     }
+
 
     private void InitializeThemes()
     {

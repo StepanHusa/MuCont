@@ -2,10 +2,10 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace MuCont.Desktop.Views;
-public partial class SettingsView : UserControl
+namespace MuCont.Desktop.Views.Dockable;
+public partial class SystemsView : UserControl
 {
-    public SettingsView()
+    public SystemsView()
     {
         InitializeComponent();
     }

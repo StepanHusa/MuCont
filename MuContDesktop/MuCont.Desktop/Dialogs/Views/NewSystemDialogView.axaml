@@ -1,0 +1,57 @@
+<UserControl
+    x:Class="MuCont.Desktop.Dialogs.Views.NewSystemDialogView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:MuCont.Desktop.FormsGenerator"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:MuCont.Desktop.Dialogs.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:NewSystemDialogViewModel"
+    mc:Ignorable="d">
+    <Grid>
+        <StackPanel>
+            <TextBlock
+                Margin="0,0,0,20"
+                FontSize="20"
+                FontWeight="Bold"
+                Text="New System" />
+            <!--<controls:AutoFormPanel Model="{Binding NewSystem}" />-->
+            <TextBox
+                Margin="0,0,0,10"
+                Text="{Binding NewSystem.Name}"
+                Watermark="Full Name" />
+            <TextBox
+                Margin="0,0,0,10"
+                Text="{Binding NewSystem.Notes}"
+                Watermark="Notes" />
+            <TextBox
+                Margin="0,0,0,10"
+                Text="{Binding NewSystem.Coordinates}"
+                Watermark="Coordinates e.g. x, y, mass, tau, x1" />
+            <TextBox
+                Margin="0,0,0,10"
+                Text="{Binding NewSystem.Parameters}"
+                Watermark="Parameters e.g. a, b, tau" />
+            <TextBox
+                Margin="0,0,0,10"
+                Text="{Binding NewSystem.TimeSymbol}"
+                Watermark="Time" />
+            <ScrollViewer
+                Height="100"
+                Margin="0,0,0,10"
+                VerticalScrollBarVisibility="Auto">
+                <TextBox
+                    AcceptsReturn="True"
+                    Text="{Binding NewSystem.Equations}"
+                    Watermark="Equations e.g.&#10; g_coef = x^2 + a &#10; x' = a*x/b  &#10; y' = g_coef * x" />
+
+            </ScrollViewer>
+            <Button
+                Margin="0,20,0,0"
+                Command="{Binding SaveCommand}"
+                Content="Save" />
+        </StackPanel>
+    </Grid>
+</UserControl>

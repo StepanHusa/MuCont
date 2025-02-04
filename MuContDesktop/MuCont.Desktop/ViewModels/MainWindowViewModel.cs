@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MuCont.Desktop.ViewModels;
-public partial class MainWindowViewModel : ObservableObject
+internal partial class MainWindowViewModel : ObservableObject
 {
     [ObservableProperty]
     private object? _currentOverlayView;
@@ -16,7 +16,7 @@ public partial class MainWindowViewModel : ObservableObject
     private bool _isOverlayVisible;
 
     [ObservableProperty]
-    private MainViewModel _mainViewModelProp;
+    private MainViewModel? _mainViewModelProp;
 
 
     public void ShowOverlay(UserControl content)

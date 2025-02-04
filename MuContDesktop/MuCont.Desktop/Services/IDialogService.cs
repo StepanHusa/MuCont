@@ -12,4 +12,6 @@ public interface IDialogService
     Task<TResult?> ShowDialogAsync<TView, TViewModel, TResult>()
         where TView : UserControl, new()
         where TViewModel : class, IDialogViewModel<TResult>;
+
+    Task ShowErrorDialog(string errorMessage);
 }

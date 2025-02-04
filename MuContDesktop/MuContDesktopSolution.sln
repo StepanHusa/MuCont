@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MuCont.Desktop", "MuCont.De
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MuCont.ComputationInterface", "MuCont.ComputationInterface\MuCont.ComputationInterface.csproj", "{4A9A1D14-EAF8-4BD5-AA02-E93350358169}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MuCont.Desktop.FormsGenerator", "MuCont.Desktop.FormsGenerator\MuCont.Desktop.FormsGenerator.csproj", "{7BEC20C8-C261-478E-A484-CEAA8DEA7285}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4A9A1D14-EAF8-4BD5-AA02-E93350358169}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A9A1D14-EAF8-4BD5-AA02-E93350358169}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A9A1D14-EAF8-4BD5-AA02-E93350358169}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BEC20C8-C261-478E-A484-CEAA8DEA7285}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BEC20C8-C261-478E-A484-CEAA8DEA7285}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BEC20C8-C261-478E-A484-CEAA8DEA7285}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BEC20C8-C261-478E-A484-CEAA8DEA7285}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

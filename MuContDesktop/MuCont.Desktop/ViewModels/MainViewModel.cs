@@ -2,23 +2,20 @@
 using CommunityToolkit.Mvvm.Input;
 using Dock.Model.Controls;
 using Dock.Model.Core;
-using Microsoft.Extensions.DependencyInjection;
 using MuCont.ComputationInterface;
+using MuCont.Desktop.Dialogs.ViewModels;
+using MuCont.Desktop.Dialogs.Views;
 using MuCont.Desktop.DockingUtilities;
 using MuCont.Desktop.Services;
 using MuCont.Desktop.ViewModels.Dockable;
-using MuCont.Desktop.ViewModels.Dockable.Plots;
 using MuCont.Desktop.Views;
 using Prism.Events;
-using ReactiveUI;
-using System;
-using System.Reactive;
 using System.Threading.Tasks;
 
 namespace MuCont.Desktop.ViewModels;
-public partial class MainViewModel : ObservableObject
+internal partial class MainViewModel : ObservableObject
 {
-    private readonly IDockFactory? _factory;
+    private readonly IDockFactory? dockFactory;
     private readonly IEventAggregator ea;
     private readonly IDialogService dialogService;
     private IRequestManager _requestManager;
@@ -31,37 +28,48 @@ public partial class MainViewModel : ObservableObject
     }
 
 
-    public MainViewModel(IEventAggregator ea, IDialogService dialogService)
+    public MainViewModel(IEventAggregator ea, IDialogService dialogService, IDockFactory dockFactory)
     {
-        _factory = new DockFactory(new DockingContext());
+        
         _requestManager = new RequestManager(ea, "D:\\Systems", "julia");
 
 
         //DebugFactoryEvents(_factory);
 
-        Layout = _factory?.CreateLayout();
+        this.ea = ea;
+        this.dialogService = dialogService;
+        this.dockFactory = dockFactory;
+    }
+
+    public void LoadDockLayout()
+    {
+
+        Layout = dockFactory?.CreateLayout();
         if (Layout is { })
         {
-            _factory?.InitLayout(Layout);
+            dockFactory?.InitLayout(Layout);
             if (Layout is { } root)
             {
                 root.Navigate.Execute("Home");
             }
         }
 
-        this.ea = ea;
-        this.dialogService = dialogService;
+
     }
 
     [RelayCommand]
     private async Task OnOpenSettingsAsync()
     {
-        await dialogService.ShowDialogAsync<SettingsView, SettingsViewModel, bool>();
+        await dialogService.ShowDialogAsync<SettingsDialogView, SettingsDialogViewModel, bool>();
     }
 
+
+
     [RelayCommand]
-    private void OnNewSystem()
+    private async Task OnNewSystemAsync()
     {
+        await dialogService.ShowDialogAsync<NewSystemDialogView, NewSystemDialogViewModel, bool>();
+
         _requestManager.RunTestTaskOnJulia();
     }
 
@@ -70,7 +78,7 @@ public partial class MainViewModel : ObservableObject
     {
         var dockable = new JuliaOutputViewModel(ea) { Id = $"Output", Title = $"Output" };
 
-        _factory?.AddDockableToCentralDock(dockable);
+        dockFactory?.AddDockableToCentralDock(dockable);
     }
 
     public void CloseLayout()
@@ -94,11 +102,11 @@ public partial class MainViewModel : ObservableObject
             }
         }
 
-        var layout = _factory?.CreateLayout();
+        var layout = dockFactory?.CreateLayout();
         if (layout is not null)
         {
             Layout = layout;
-            _factory?.InitLayout(layout);
+            dockFactory?.InitLayout(layout);
         }
     }
 
