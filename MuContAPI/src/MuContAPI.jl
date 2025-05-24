@@ -2,7 +2,7 @@ module MuContAPI
 
 using HTTP
 using JSON3
-using MuCont
+import MuCont as cont
 using Logging
 using LoggingExtras
 
@@ -22,7 +22,8 @@ function handle_request(req::HTTP.Request)
             data = JSON3.read(body)["numbers"]
 
             # Call a function from the computation package
-            result = MuContCore.compute_task(data)
+            result = cont.simple_computer_add(data[1], data[2])
+            @debug "Computation performed" input=data result=result
 
             @info "Computation successful" input=data result=result
             # Return the result as JSON

@@ -1,7 +1,5 @@
 module SystemModels
 
-using JSON3
-
 @enum SymbolType Variable Coordinate Time
 
 
