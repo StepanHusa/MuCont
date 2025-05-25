@@ -6,6 +6,10 @@ import MuCont as cont
 using Logging
 using LoggingExtras
 
+include("Jobs.jl")
+
+
+
 function handle_request(req::HTTP.Request)
     # Extract the path from the request
     route = String(req.target)
@@ -23,7 +27,6 @@ function handle_request(req::HTTP.Request)
 
             # Call a function from the computation package
             result = cont.simple_computer_add(data[1], data[2])
-            @debug "Computation performed" input=data result=result
 
             @info "Computation successful" input=data result=result
             # Return the result as JSON
@@ -33,6 +36,9 @@ function handle_request(req::HTTP.Request)
             # Handle errors
             return HTTP.Response(400, JSON3.write(Dict("error" => string(e))))
         end
+    elseif startswith(route, "/compute")
+
+
     else
         # Unknown route
         @warn "Unknown route accessed" route=route
