@@ -1,6 +1,5 @@
 module Jobs
 
-const JOBS = Dict{String, JobState}()
 
 struct JobState
     status::String             # e.g., "running", "done", "error"
@@ -8,4 +7,8 @@ struct JobState
     result::Vector{Tuple{Float64, Float64}}  # Or any structure for curve points
     error::Union{Nothing, String}
 end
+
+const JOBS = Dict{String, JobState}()
+
+
 end

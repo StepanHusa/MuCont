@@ -1,5 +1,4 @@
 using NamedDims
-using Plots
 using ForwardDiff
 using LinearAlgebra
 

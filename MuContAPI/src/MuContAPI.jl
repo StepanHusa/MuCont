@@ -2,66 +2,57 @@ module MuContAPI
 
 using HTTP
 using JSON3
-import MuCont as cont
 using Logging
 using LoggingExtras
 
-include("Jobs.jl")
+import MuCont as cont
 
+include("Jobs.jl")
+include("Routes.jl")
+
+using .Routes
 
 
 function handle_request(req::HTTP.Request)
-    # Extract the path from the request
-    route = String(req.target)
-    @info "Received request" route=route method=req.method
+    method = Symbol(req.method)
+    path = split(String(req.target), '?')[1]
+    key = (method, path)
 
-    if route == "/"
-        # Home endpoint
-        return HTTP.Response(200, "Welcome to MuCont API!")
-    elseif startswith(route, "/compute")
-        # Example computation endpoint: expects JSON input
-        try
-            # Parse JSON payload from the request body
-            body = String(req.body)
-            data = JSON3.read(body)["numbers"]
+    @debug "Executing request" request = req key=key
 
-            # Call a function from the computation package
-            result = cont.simple_computer_add(data[1], data[2])
-
-            @info "Computation successful" input=data result=result
-            # Return the result as JSON
-            return HTTP.Response(200, JSON3.write(Dict("result" => result)))
-        catch e
-            @error "Error processing request" error=string(e)
-            # Handle errors
-            return HTTP.Response(400, JSON3.write(Dict("error" => string(e))))
-        end
-    elseif startswith(route, "/compute")
-
-
+    if haskey(Routes.ROUTES, key)
+        return Routes.ROUTES[key](req)
     else
-        # Unknown route
-        @warn "Unknown route accessed" route=route
+        @warn "Unknown route accessed" route = route
         return HTTP.Response(404, "Endpoint not found")
     end
 end
 
 
-function start_api_server(host::String, port::Int)
-    @info "Starting API server" host=host port=port
 
-    println("Starting API server at $host:$port...")
+
+function start_api_server(host::String, port::Int)
+    @info "Starting API server" host = host port = port
+
     HTTP.serve(handle_request, host, port)
 end
 
+# function __init__()
+#     Routes.register_routes()
+# end
+
 function main()
     CONFIG = load_config() # TODO research if it is good idea to make CONFIG global
-    host = CONFIG["host"]
-    port = CONFIG["port"]
 
     log_file = joinpath(CONFIG["log_path"], "MuContAPI.log")
-    setup_log(log_file)  
+    setup_log(log_file)
 
+    @info "Logs location" log_file = log_file
+
+    Routes.register_routes()
+
+    host = CONFIG["host"]
+    port = CONFIG["port"]
     start_api_server(host, port)
 end
 
@@ -71,7 +62,9 @@ function setup_log(log_file)
         mkpath(log_dir)
     end
 
-    global_logger(FileLogger(log_file))
+    # global_logger(FileLogger(log_file))
+    logger = TeeLogger(ConsoleLogger(stderr, Logging.Debug), FileLogger(log_file)) # debug
+    global_logger(logger)
 end
 
 function load_config()
@@ -82,7 +75,7 @@ function load_config()
     catch e
         # dont use this as an example of throwing... 
         #this is only before the log file is initialized
-        println("ERROR: Failed to parse config file at $config_path: " * string(e)) 
+        println("ERROR: Failed to parse config file at $config_path: " * string(e))
         error("Failed to parse config file at $config_path: " * string(e))
     end
 end
