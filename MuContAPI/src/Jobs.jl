@@ -1,5 +1,7 @@
 module Jobs
 
+export JOBS, JOBS_LOCK, JobState, get_job, set_job, update_job!
+
 
 struct JobState
     status::String             # e.g., "running", "done", "error"
@@ -8,7 +10,26 @@ struct JobState
     error::Union{Nothing, String}
 end
 
+
 const JOBS = Dict{String, JobState}()
+const JOBS_LOCK = ReentrantLock()
 
+# Optional convenience functions:
+function get_job(id::String)
+    lock(JOBS_LOCK) do
+        return get(JOBS, id, nothing)
+    end
+end
 
+function set_job(id::String, state::JobState)
+    lock(JOBS_LOCK) do
+        JOBS[id] = state
+    end
+end
+
+function update_job!(id::String, f::Function)
+    lock(JOBS_LOCK) do
+        f(JOBS[id])
+    end
+end
 end

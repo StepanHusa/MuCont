@@ -7,39 +7,15 @@ using LoggingExtras
 
 import MuCont as cont
 
+include("Errors.jl")
+include("Utils.jl")
 include("Jobs.jl")
+include("Handlers.jl")
 include("Routes.jl")
 
-using .Routes
+using MuContAPI.Routes
+using MuContAPI.Errors
 
-
-function handle_request(req::HTTP.Request)
-    method = Symbol(req.method)
-    path = split(String(req.target), '?')[1]
-    key = (method, path)
-
-    @debug "Executing request" request = req key=key
-
-    if haskey(Routes.ROUTES, key)
-        return Routes.ROUTES[key](req)
-    else
-        @warn "Unknown route accessed" route = route
-        return HTTP.Response(404, "Endpoint not found")
-    end
-end
-
-
-
-
-function start_api_server(host::String, port::Int)
-    @info "Starting API server" host = host port = port
-
-    HTTP.serve(handle_request, host, port)
-end
-
-# function __init__()
-#     Routes.register_routes()
-# end
 
 function main()
     CONFIG = load_config() # TODO research if it is good idea to make CONFIG global
@@ -55,6 +31,49 @@ function main()
     port = CONFIG["port"]
     start_api_server(host, port)
 end
+
+function handle_request(req::HTTP.Request)
+    method = Symbol(req.method)
+    path = split(String(req.target), '?')[1]
+    key = (method, path)
+
+    @debug "Executing request" method=method path=path
+
+    if haskey(Routes.ROUTES, key)
+        try
+            return Routes.ROUTES[key](req)
+        catch e
+            @error "Unhandled exception" exception=e method=method path=path
+            @debug "Unhandled exception" exception=e method=method path=path
+
+            if e isa MissingParamError
+                return HTTP.Response(400, "Missing query parameter: $(e.key)")
+            elseif e isa ValidationError
+                return HTTP.Response(422, "Validation error: $(e.msg)")
+            elseif e isa ComputationError
+                return HTTP.Response(500, "Job $(e.job_id) failed: $(e.reason)")
+            elseif e isa APIError
+                return HTTP.Response(500, "Unclassified API error")
+            else
+                return HTTP.Response(500, "Internal server error")
+            end
+        end
+    else
+        @warn "Unknown route accessed" method=method path=path
+        return HTTP.Response(404, "Endpoint not found")
+    end
+end
+
+
+
+
+
+function start_api_server(host::String, port::Int)
+    @info "Starting API server" host = host port = port
+
+    HTTP.serve(handle_request, host, port)
+end
+
 
 function setup_log(log_file)
     log_dir = dirname(log_file)

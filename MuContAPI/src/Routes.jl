@@ -2,9 +2,8 @@ module Routes
 
 using HTTP
 
-include("Handlers.jl")
-
-using .Handlers
+using MuContAPI.Handlers 
+using MuContAPI.Utils
 
 const ROUTES = Dict{Tuple{Symbol,String}, Function}()
 
@@ -21,9 +20,18 @@ function register_routes()
     # register("/start_job", :POST, req -> Handlers.post_start_job())
 
     register(:GET, "/job_status") do req
-        query = HTTP.URIs.queryparams(HTTP.URI(req.target))
-        return Handlers.get_job_status(get(query, "id", nothing))
+        id = require_param(req, "id")
+
+        return Handlers.get_job_status(id)
     end
+
+    # register(:GET, "/job_status") do req
+    #     query = HTTP.URIs.queryparams(HTTP.URI(req.target))
+    #     @debug "query" q = query
+    #     id = get(query, "id", nothing)
+
+    #     return Handlers.get_job_status()
+    # end
 end
 
 end
