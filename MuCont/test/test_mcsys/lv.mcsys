@@ -1,0 +1,22 @@
+{
+  "name": "Lotka-Volterra",
+  "coordinates": ["x", "y"],
+  "parameters": ["a", "b", "c", "d"],
+  "functions": {},
+  "equations": [
+    ["x", "a * x - b * x * y"],
+    ["y", "-c * y + d * x * y"]
+  ],
+  "displayfunctions": [
+    ["total_population", "x + y"]
+  ],
+  "latexnaming": {
+    "x": "x",
+    "y": "y",
+    "a": "\\alpha",
+    "b": "\\beta",
+    "c": "\\gamma",
+    "d": "\\delta",
+    "total_population": "x + y"
+  }
+}

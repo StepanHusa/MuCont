@@ -1,0 +1,5 @@
+- The system is in json, that should be clear.
+- Variables ar distinct strings, that must be parsable by the Symbolic library.
+- functions must be in the correct order if referencing one another.
+- equations can make use of functions, they should be in the order of coordinates, but the program might be able to correct. 
+- the display functions should be independent. (I can change it later)

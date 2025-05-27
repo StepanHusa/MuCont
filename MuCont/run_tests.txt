@@ -1,0 +1,5 @@
+julia
+] activate .
+test
+
+or using Pkg, Pkg.activate("."), Pkg.test()

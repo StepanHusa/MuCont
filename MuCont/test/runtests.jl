@@ -1,4 +1,4 @@
-using cont
+import MuCont as cont
 using Test
 
 function validate_results(results, expected_length, tol)
@@ -13,5 +13,13 @@ end
 # end
 
 @testset "Continuation Tests" begin
-    @test simple_computer_add(2,3) == 5
+    @test cont.simple_computer_add(2, 3) == 5
+end
+
+@testset "System Parser Tests" begin
+    file = joinpath(@__DIR__, "test_mcsys/lv.mcsys")
+    model = cont.SystemParser.parse_mcsys(file)
+
+    @test model isa cont.SystemParser.MuSystem
+    @test length(model.equations) > 0
 end

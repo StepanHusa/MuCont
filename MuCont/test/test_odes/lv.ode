@@ -1,0 +1,14 @@
+# Lotka-Volterra model
+par a=1, b=0.5
+par c=0.75, d=0.5
+
+x' =  a*x - b*x*y         # Prey equation
+y' = -c*y + d*x*y         # Predator equation
+
+aux H = x + y             # Total population (auxiliary)
+
+global 1 x-10 { x = 5 }   # Event: if x (prey) rises above 10, reset it to 5
+
+init x=10, y=5
+@ total=100, dt=0.1
+done
