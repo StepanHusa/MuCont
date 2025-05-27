@@ -13,11 +13,31 @@ struct MuSystem
     equations::Vector{Symbolics.Num}
     displayfunctions::Vector{Pair{Symbol,Symbolics.Num}}
     latexnames::Dict{Symbol,String}
+
+    # all_variables::Symbolics.Num[]
+end
+
+struct CompiledSystem
+    model::MuSystem
+    ncoords::Int
+    nparams::Int
+    f::Function
+    jacobian::Function
 end
 
 const RESERVED = Set(["period", "length", "step", "solver", "method", "jacobian", "t"])
 
+function compile_system(model::MuSystem)::CompiledSystem
+    syms = [Symbolics.scalarize(Symbolics.variable(s)) for s in vcat(model.coordinates, model.parameters)]
+    coords = [Symbolics.scalarize(Symbolics.variable(s)) for s in model.coordinates]
 
+    f_out, f_in = Symbolics.build_function(model.equations, syms; expression=Val(false)) |> eval # the in function is good for loops and prealocated arrays
+
+    J = Symbolics.jacobian(model.equations, coords)
+    J_out, J_in = Symbolics.build_function(J, syms; expression=Val(false)) |> eval
+
+    return CompiledSystem(model, length(model.coordinates), length(model.parameters), f_out, J_out)
+end
 
 
 function parse_mcsys(filename::String)::MuSystem

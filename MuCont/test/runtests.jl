@@ -22,4 +22,11 @@ end
 
     @test model isa cont.SystemParser.MuSystem
     @test length(model.equations) > 0
+
+    compiled_system = cont.SystemParser.compile_system(model)
+
+    @test compiled_system isa cont.SystemParser.CompiledSystem
+
+    cont.demo_system_cont()
 end
+

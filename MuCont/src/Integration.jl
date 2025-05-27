@@ -1,21 +1,16 @@
-module  Integration
+module Integration
 
-"""
-    continue_ode(system, params)
+# using DifferentialEquations
+using OrdinaryDiffEq
 
-Performs continuation for the given ODE system with specified parameters.
+function integrate_ode(f, initials, tspan; params=nothing, solver=Tsit5())
+    # Define the ODE problem
+    prob = ODEProblem(f, initials, tspan, params)
 
-# Arguments
-- `system`: The ODE system to continue.
-- `params`: Parameters for the continuation.
+    # Solve the ODE
+    sol = solve(prob, solver)
 
-# Returns
-Continuation results.
-"""
-function continue_ode(system, params)
-    # Your continuation logic
-    return results
+    return sol
 end
 
-    
 end

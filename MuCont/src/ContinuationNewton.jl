@@ -1,36 +1,74 @@
 module ContinuationNewton
 
+using NamedDims
+using ForwardDiff
+using LinearAlgebra
+
 export continuate # TODO make a rule of what to export and what not
 
 function direction(fun_jacobi, x)
     J = fun_jacobi(x) # a 2x3 matrix computed from the variables and one free parameter
-    
+
     v = nullspace(J)
     v = vec(v)
-    
+
     return normalize(v)
+end
+
+function continuate_newton(f, initial, npoints, Jac=nothing, h=0.01)
+    ncoords = length(initial)
+    # f = y -> [dot(y,y)- 1, y[1]]
+
+    tol = 1e-10
+    if Jac === nothing
+        Jac = (x) -> ForwardDiff.jacobian(f, x)
     end
 
-function continuate(f, J, initials, npoints)
-    x0 = initials
 
-    stepsize = 0.1
-    
-    x = []
+    @assert rank(Jac(initial), tol) == ncoords
+    N = nullspace(Jac(initial))
 
-    for i in 1:npoints
-        direction = direction(J, initials)
-        x1 = x0 + stepsize * direction
+    v = N[:, 1]
+    v = v / norm(v)
 
-        x2 = x1 - J(x1)\f(x1) # newton correction
-        # there could be a second correction
+    x = initial
 
-        push!(x, x2)
+    # determine the dirrection for the first time 
+    data = Array{Float64}(undef, npoints, ncoords)
 
-        x0 = x2        
+    curve = NamedDimsArray(data, (:point, :coord))
+
+    curve[point=1] = x
+
+    i = 2
+
+    while i < npoints
+        x = x + h * v
+
+        for j in 1:2
+            J = Jac(x)
+            @assert rank(J, tol) == ncoords
+            fx = f(x)
+
+            x = x + -J \ fx
+        end
+
+
+        curve[point=i] = x
+
+        J = Jac(x)
+        @assert rank(J, tol) == ncoords
+        N = nullspace(J)
+
+        v = N[:, 1]
+        v = v / norm(v)
+
+        i += 1
     end
 
-    return x
+
+
+    return curve
 end
 
 end # module
