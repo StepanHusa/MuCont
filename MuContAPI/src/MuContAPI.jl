@@ -16,9 +16,13 @@ include("Routes.jl")
 using MuContAPI.Routes
 using MuContAPI.Errors
 
+const CONF = Dict{String, String}
+
 
 function main()
     CONFIG = load_config() # TODO research if it is good idea to make CONFIG global
+
+    CONF["systems_folder"] = CONFIG["systems_folder"]
 
     log_file = joinpath(CONFIG["log_path"], "MuContAPI.log")
     setup_log(log_file)

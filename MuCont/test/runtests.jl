@@ -55,4 +55,6 @@ end
 
     @test compiled_system isa cont.SystemParser.CompiledSystem
 
+    result = cont.demo_system_cont(compiled_system)
 end
+
