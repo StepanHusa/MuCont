@@ -5,7 +5,7 @@
   "functions": [],
   "equations": [
     ["x", "x + exp(y)"],
-    ["y", "ln(c+y) + y^0.5 + sin(x) - tanh(x) + sqrt(y)"]
+    ["y", "log(c+y) + y^0.5 + sin(x) - tanh(x) + sqrt(y)"]
   ],
   "displayfunctions": [
     ["total_population", "x + y"]

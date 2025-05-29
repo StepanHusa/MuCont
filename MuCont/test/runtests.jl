@@ -29,6 +29,10 @@ end
     @test compiled_system.f([1.0, 1, 1, 1, 1, 1]) isa Vector{Float64}
     # @test compiled_system.jacobian([1.0, 1, 1, 1, 1, 1]) isa Vector{Float64}
 
+    result = cont.demo_system_cont(compiled_system)
+
+    # @info "curve" result = result
+
 end
 
 @testset "System Parser Tests - dependent system" begin
@@ -54,7 +58,5 @@ end
     compiled_system = cont.SystemParser.compile_system(model)
 
     @test compiled_system isa cont.SystemParser.CompiledSystem
-
-    result = cont.demo_system_cont(compiled_system)
 end
 

@@ -16,7 +16,7 @@ include("Routes.jl")
 using MuContAPI.Routes
 using MuContAPI.Errors
 
-const CONF = Dict{String, String}
+const CONF = Dict{String, String}()
 
 
 function main()
