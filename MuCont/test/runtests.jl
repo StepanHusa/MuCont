@@ -26,7 +26,33 @@ end
     compiled_system = cont.SystemParser.compile_system(model)
 
     @test compiled_system isa cont.SystemParser.CompiledSystem
+    @test compiled_system.f([1.0, 1, 1, 1, 1, 1]) isa Vector{Float64}
+    # @test compiled_system.jacobian([1.0, 1, 1, 1, 1, 1]) isa Vector{Float64}
 
-    cont.demo_system_cont()
 end
 
+@testset "System Parser Tests - dependent system" begin
+    file = joinpath(@__DIR__, "test_mcsys/dependent.mcsys")
+    model = cont.SystemParser.parse_mcsys(file)
+
+    @test model isa cont.SystemParser.MuSystem
+    @test length(model.equations) > 0
+
+    compiled_system = cont.SystemParser.compile_system(model)
+
+    @test compiled_system isa cont.SystemParser.CompiledSystem
+
+end
+
+@testset "System Parser Tests - functions like exp, cos in the system" begin
+    file = joinpath(@__DIR__, "test_mcsys/functional.mcsys")
+    model = cont.SystemParser.parse_mcsys(file)
+
+    @test model isa cont.SystemParser.MuSystem
+    @test length(model.equations) > 0
+
+    compiled_system = cont.SystemParser.compile_system(model)
+
+    @test compiled_system isa cont.SystemParser.CompiledSystem
+
+end

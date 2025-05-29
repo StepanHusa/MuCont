@@ -1,11 +1,11 @@
 {
-  "name": "Lotka-Volterra",
+  "name": "System with dependencies",
   "coordinates": ["x", "y"],
   "parameters": ["a", "b", "c", "d"],
   "functions": [],
   "equations": [
-    ["x", "a * x - b * x * y"],
-    ["y", "-c * y + d * x * y"]
+    ["x", "x + exp(y)"],
+    ["y", "ln(c+y) + y^0.5 + sin(x) - tanh(x) + sqrt(y)"]
   ],
   "displayfunctions": [
     ["total_population", "x + y"]

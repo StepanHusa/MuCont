@@ -22,6 +22,7 @@ struct CompiledSystem
     ncoords::Int
     nparams::Int
     f::Function
+    f_inplace!::Function
     jacobian::Function
 end
 
@@ -31,12 +32,12 @@ function compile_system(model::MuSystem)::CompiledSystem
     syms = [Symbolics.scalarize(Symbolics.variable(s)) for s in vcat(model.coordinates, model.parameters)]
     coords = [Symbolics.scalarize(Symbolics.variable(s)) for s in model.coordinates]
 
-    f_out, f_in = Symbolics.build_function(model.equations, syms; expression=Val(false)) |> eval # the in function is good for loops and prealocated arrays
+    f_out, f_inplace! = Symbolics.build_function(model.equations, syms; expression=Val(false)) |> eval # the in function is good for loops and prealocated arrays
 
     J = Symbolics.jacobian(model.equations, coords)
-    J_out, J_in = Symbolics.build_function(J, syms; expression=Val(false)) |> eval
+    J_out, J_inplace! = Symbolics.build_function(J, syms; expression=Val(false)) |> eval
 
-    return CompiledSystem(model, length(model.coordinates), length(model.parameters), f_out, J_out)
+    return CompiledSystem(model, length(model.coordinates), length(model.parameters), f_out, f_inplace!, J_out)
 end
 
 
