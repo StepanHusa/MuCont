@@ -12,7 +12,7 @@ function demo_continuate_circle()
 
     initial_p = [0, 1, 0]
     h = 0.01
-    npoints = 100
+    npoints = 300
     tol = 1e-10
 
 
@@ -37,7 +37,7 @@ function demo_continuate_circle()
 
     i = 2
 
-    while i < npoints
+    while i <= npoints
         x = x + h * v
 
         for j in 1:2

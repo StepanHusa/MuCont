@@ -23,7 +23,7 @@ struct CompiledSystem
     nparams::Int
     f::Function
     f_inplace!::Function
-    jacobian::Function
+    Total_Diff::Function
 end
 
 const RESERVED = Set(["period", "length", "step", "solver", "method", "jacobian", "t"])
@@ -34,10 +34,10 @@ function compile_system(model::MuSystem)::CompiledSystem
 
     f_out, f_inplace! = Symbolics.build_function(model.equations, syms; expression=Val(false)) |> eval # the in function is good for loops and prealocated arrays
 
-    J = Symbolics.jacobian(model.equations, coords)
-    J_out, J_inplace! = Symbolics.build_function(J, syms; expression=Val(false)) |> eval
+    Total_Diff = Symbolics.jacobian(model.equations, syms)
+    Total_Diff_out, Total_Diff_inplace! = Symbolics.build_function(Total_Diff, syms; expression=Val(false)) |> eval
 
-    return CompiledSystem(model, length(model.coordinates), length(model.parameters), f_out, f_inplace!, J_out)
+    return CompiledSystem(model, length(model.coordinates), length(model.parameters), f_out, f_inplace!, Total_Diff_out)
 end
 
 
