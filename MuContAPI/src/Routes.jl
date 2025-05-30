@@ -8,7 +8,7 @@ using MuContAPI.Utils
 const ROUTES = Dict{Tuple{Symbol,String},Function}()
 
 function register(handler::Function, method::Symbol, path::String)
-    ROUTES[(method, "/api/" + path)] = handler
+    ROUTES[(method, "/api/" * path)] = handler
 end
 
 function register_routes()
