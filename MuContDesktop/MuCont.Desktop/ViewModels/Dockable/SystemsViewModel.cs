@@ -16,6 +16,7 @@ internal partial class SystemsViewModel(ISystemService systemService, IDialogSer
 {
     private readonly ISystemService systemService = systemService;
     private readonly IDialogService dialogService = dialogService;
+
     [ObservableProperty]
     private ObservableCollection<SystemModel> _systems = new();
 
@@ -38,3 +39,6 @@ internal partial class SystemsViewModel(ISystemService systemService, IDialogSer
         Systems = new(systems);
     }
 }
+
+
+

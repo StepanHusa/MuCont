@@ -116,6 +116,7 @@ public static class ControlFactory
         {
             Type t when t == typeof(bool) => new CheckBox { [!ToggleButton.IsCheckedProperty] = binding },
             Type t when t == typeof(DateTime) => new DatePicker { [!DatePicker.SelectedDateProperty] = binding },
+
             _ => new TextBox { [!TextBox.TextProperty] = binding }
         };
     }

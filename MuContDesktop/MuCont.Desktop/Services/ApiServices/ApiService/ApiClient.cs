@@ -7,14 +7,15 @@ using System.Threading.Tasks;
 namespace MuCont.Desktop.Services.ApiServices.ApiService;
 
 
-public class ApiClient:IApiClient
+public class ApiClient : IApiClient
 {
     private readonly HttpClient _httpClient;
 
     public ApiClient()
     {
         _httpClient = new HttpClient { 
-            BaseAddress = new Uri(new Uri(GlobalDefaultSettings.APIUrl), "api/")
+            //BaseAddress = new Uri(new Uri(GlobalDefaultSettings.APIUrl), "api/")
+            BaseAddress = new Uri(new Uri(GlobalDefaultSettings.APIUrl), "")
         };
     }
 

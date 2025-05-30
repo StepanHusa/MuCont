@@ -10,6 +10,29 @@
     x:DataType="vm:SystemsViewModel"
     mc:Ignorable="d">
     <Grid>
-        <Button Command="{Binding RefreshCommand}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+
+        <Button Command="{Binding RefreshCommand}">
+            <TextBlock Text="Refresh" />
+        </Button>
+
+        <!--<ItemsControl
+            Grid.Row="1"
+            Items="{Binding Systems}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+
+                        <TextBlock Text="{Binding Name}" />
+                        <TextBlock Text="{Binding Describtion}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>-->
+
     </Grid>
 </UserControl>

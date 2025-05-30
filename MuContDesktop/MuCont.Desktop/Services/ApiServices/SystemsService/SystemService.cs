@@ -27,10 +27,11 @@ public class SystemModel
 {
     uint Id { get; set; }
     string Name { get; set; }
-    IEnumerable<string> Info { get; set; }
-    IEnumerable<string> Notes { get; set; }
+    string Describtion { get; set; }
+    //IEnumerable<string> Info { get; set; }
+    //IEnumerable<string> Notes { get; set; }
 
-    IEnumerable<SymbolModel> Variables { get; set; }    
+    //IEnumerable<SymbolModel> Variables { get; set; }    
 
 }
 
