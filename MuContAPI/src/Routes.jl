@@ -12,9 +12,14 @@ function register(handler::Function, method::Symbol, path::String)
 end
 
 function register_routes()
+    register(:POST, "simple_computer_add") do req
+        data = from_json(req, "numbers")
+        return Handlers.post_simple_compute_request(data)
+    end
+
     register(:POST, "start_job") do req
-        # return Handlers.post_start_job()
-        return HTTP.Response(200, "OK")
+        return Handlers.post_start_job()
+        # return HTTP.Response(200, "OK")
     end
 
     # register("start_job", :POST, req -> Handlers.post_start_job())

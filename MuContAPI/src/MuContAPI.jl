@@ -52,6 +52,8 @@ function handle_request(req::HTTP.Request)
 
             if e isa MissingParamError
                 return HTTP.Response(400, "Missing query parameter: $(e.key)")
+            elseif e isa MissingJsonParamError
+                return HTTP.Response(400, "Missing json parameter: $(e.key)")
             elseif e isa ValidationError
                 return HTTP.Response(422, "Validation error: $(e.msg)")
             elseif e isa ComputationError

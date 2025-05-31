@@ -8,6 +8,10 @@ struct MissingParamError <: APIError
     key::String
 end
 
+struct MissingJsonParamError <: APIError
+    key::String
+end
+
 struct ValidationError <: APIError
     msg::String
 end

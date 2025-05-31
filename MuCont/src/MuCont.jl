@@ -3,6 +3,7 @@ module MuCont
 include("Models.jl")
 include("SystemModels.jl")
 include("SystemParser.jl")
+include("SystemManager.jl")
 include("Integration.jl")
 include("ContinuationNewton.jl")
 include("demo_continuate_circle.jl")
