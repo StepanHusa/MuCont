@@ -5,6 +5,11 @@ using Symbolics
 
 export MuSystem, parse_mcsys
 
+struct MuSystemBasic
+    name::String
+    
+end
+
 struct MuSystem
     name::String
     coordinates::Vector{Symbol}
@@ -38,6 +43,13 @@ function compile_system(model::MuSystem)::CompiledSystem
     Total_Diff_out, Total_Diff_inplace! = Symbolics.build_function(Total_Diff, syms; expression=Val(false)) |> eval
 
     return CompiledSystem(model, length(model.coordinates), length(model.parameters), f_out, f_inplace!, Total_Diff_out)
+end
+
+function get_system_basic_info(filename::String)
+    data = JSON3.read(filename)
+    name = String(data["name"])
+
+    return MuSystemBasic(name)
 end
 
 

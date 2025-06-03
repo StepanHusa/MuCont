@@ -25,21 +25,23 @@ function main()
 
     log_file = joinpath(config["log_path"], "MuContAPI.log")
     setup_log(log_file)
-
+    
     @info "Logs location" log_file = log_file
-
+    
     setup_cont_managers(config)
-
+    
     Routes.register_routes()
-
+    
     host = config["host"]
     port = config["port"]
     start_api_server(host, port)
 end
 
 function setup_cont_managers(config)
-    cont.SystemManager.SetMuContFolder(config["mucont_folder"])
-
+    path = config["mucont_folder"]
+    cont.SystemManager.SetMuContFolder(path)
+    @info "MuCont folder set" path = path
+     
     @info "MuCont managers initialized"
 end
 
@@ -55,7 +57,7 @@ function handle_request(req::HTTP.Request)
             return Routes.ROUTES[key](req)
         catch e
             @error "Unhandled exception" exception = e method = method path = path
-            @debug "Unhandled exception" exception = e method = method path = path
+            # @debug "Unhandled exception" exception = e method = method path = path
 
             if e isa MissingParamError
                 return HTTP.Response(400, "Missing query parameter: $(e.key)")

@@ -1,6 +1,6 @@
 module Errors
 
-export APIError, MissingParamError, ValidationError, ComputationError
+export APIError, MissingParamError, MissingJsonParamError, ValidationError, ComputationError
 
 abstract type APIError <: Exception end
 

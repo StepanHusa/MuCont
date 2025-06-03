@@ -17,7 +17,7 @@ function get_all_systems()
 
     @info "Retrieved systems" systems = systems
     return HTTP.Response(200, JSON3.write(Dict(
-        "systems" => systems
+        "systems" => "hello"
     )))
 end
 
@@ -41,8 +41,8 @@ function post_start_job()
     return HTTP.Response(200, "OK")
 end
 
-function get_systems(filter=nothing)
+# function get_systems(filter=nothing)
 
-end
+# end
 
 end

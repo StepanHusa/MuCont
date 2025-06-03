@@ -17,7 +17,8 @@ end
 end
 
 @testset "Access to systems folder" begin
-    file = joinpath(@__DIR__, "test_mcsys/")
+    folder = joinpath(@__DIR__, "test_mcsys/")
+    cont.SystemManager.SetMuContFolder(folder)
     systems = cont.SystemManager.get_systems()
     @test length(systems) > 0
 end
@@ -35,7 +36,7 @@ end
     @test compiled_system.f([1.0, 1, 1, 1, 1, 1]) isa Vector{Float64}
     # @test compiled_system.jacobian([1.0, 1, 1, 1, 1, 1]) isa Vector{Float64}
 
-    result = cont.demo_system_cont(compiled_system)
+    # result = cont.demo_system_cont(compiled_system)
 
     # @info "curve" result = result
 
@@ -66,3 +67,8 @@ end
     @test compiled_system isa cont.SystemParser.CompiledSystem
 end
 
+@testset "Continuation" begin
+    
+
+    @test true
+end

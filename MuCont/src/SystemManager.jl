@@ -19,11 +19,17 @@ function get_systems()
     assert_mucont_folder()
     files = readdir(MUCONT_FOLDER[])
 
-    systems = []
+    systems = SystemParser.MuSystemBasic[]
     for file in files
+         
         if endswith(file, ".mcsys")
-            s = SystemParser.parse_mcsys(file)
-            append!(systems, s)
+            fullname =  joinpath(MUCONT_FOLDER[], file)
+            try 
+                s = SystemParser.get_system_basic_info(fullname)
+                push!(systems, s)
+            catch
+                @warn "Could not parse the file" file = fullname
+            end
         end
     end
 
