@@ -30,6 +30,10 @@ function register_routes()
         return Handlers.get_job_status(id)
     end
 
+    register(:GET, "get_systems") do req
+        return Handlers.get_all_systems()
+    end
+
     # register(:GET, "job_status") do req
     #     query = HTTP.URIs.queryparams(HTTP.URI(req.target))
     #     @debug "query" q = query

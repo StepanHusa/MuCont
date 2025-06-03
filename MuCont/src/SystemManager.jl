@@ -1,23 +1,23 @@
-module SystemsManager
+module SystemManager
 
 using MuCont.SystemParser
 
-MUCONT_FOLDER = ""
+const MUCONT_FOLDER = Ref("")
 
 function SetMuContFolder(path::String)
     # TODO add validation
-    MUCONT_FOLDER = path
+    MUCONT_FOLDER[] = path
 end
 
 
 function assert_mucont_folder()
-    MUCONT_FOLDER === "" && throw("System folder not set, call SystemsManager.SetMuContFolder()")
+    MUCONT_FOLDER[] === "" && throw("System folder not set, call SystemsManager.SetMuContFolder()")
 end
 
 
 function get_systems()
     assert_mucont_folder()
-    files = readdir(MUCONT_FOLDER)
+    files = readdir(MUCONT_FOLDER[])
 
     systems = []
     for file in files
@@ -29,5 +29,5 @@ function get_systems()
 
     return systems
 end
-    
+
 end

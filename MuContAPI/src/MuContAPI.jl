@@ -16,24 +16,31 @@ include("Routes.jl")
 using MuContAPI.Routes
 using MuContAPI.Errors
 
-const CONF = Dict{String, String}()
+# const CONF = Dict{String,String}()
 
 
 function main()
-    CONFIG = load_config() # TODO research if it is good idea to make CONFIG global
+    config = load_config() # TODO research if it is good idea to make CONFIG global
 
-    CONF["systems_folder"] = CONFIG["systems_folder"]
 
-    log_file = joinpath(CONFIG["log_path"], "MuContAPI.log")
+    log_file = joinpath(config["log_path"], "MuContAPI.log")
     setup_log(log_file)
 
     @info "Logs location" log_file = log_file
 
+    setup_cont_managers(config)
+
     Routes.register_routes()
 
-    host = CONFIG["host"]
-    port = CONFIG["port"]
+    host = config["host"]
+    port = config["port"]
     start_api_server(host, port)
+end
+
+function setup_cont_managers(config)
+    cont.SystemManager.SetMuContFolder(config["mucont_folder"])
+
+    @info "MuCont managers initialized"
 end
 
 function handle_request(req::HTTP.Request)
@@ -41,14 +48,14 @@ function handle_request(req::HTTP.Request)
     path = split(String(req.target), '?')[1]
     key = (method, path)
 
-    @debug "Executing request" method=method path=path
+    @debug "Executing request" method = method path = path
 
     if haskey(Routes.ROUTES, key)
         try
             return Routes.ROUTES[key](req)
         catch e
-            @error "Unhandled exception" exception=e method=method path=path
-            @debug "Unhandled exception" exception=e method=method path=path
+            @error "Unhandled exception" exception = e method = method path = path
+            @debug "Unhandled exception" exception = e method = method path = path
 
             if e isa MissingParamError
                 return HTTP.Response(400, "Missing query parameter: $(e.key)")
@@ -65,7 +72,7 @@ function handle_request(req::HTTP.Request)
             end
         end
     else
-        @warn "Unknown route accessed" method=method path=path
+        @warn "Unknown route accessed" method = method path = path
         return HTTP.Response(404, "Endpoint not found")
     end
 end
