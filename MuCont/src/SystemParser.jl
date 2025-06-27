@@ -3,15 +3,14 @@ module SystemParser
 using JSON3
 using Symbolics
 
-export MuSystem, parse_mcsys
-
-struct MuSystemBasic
+struct MuSystemInfo
+    id::String
     name::String
     
 end
 
 struct MuSystem
-    name::String
+    info::MuSystemInfo
     coordinates::Vector{Symbol}
     parameters::Vector{Symbol}
     functions::Vector{Pair{Symbol,Symbolics.Num}}
@@ -47,16 +46,22 @@ end
 
 function get_system_basic_info(filename::String)
     data = JSON3.read(filename)
+    id = filename
     name = String(data["name"])
 
-    return MuSystemBasic(name)
+    return MuSystemInfo(id,name)
 end
+
+# TODO rewrite as get_system_basic_info(data), the file handeling done by some interface.
 
 
 function parse_mcsys(filename::String)::MuSystem
     data = JSON3.read(filename)
 
+    id = filename
     name = String(data["name"])
+    info = MuSystemInfo(id, name)
+
     coords = Symbol.(data["coordinates"])
     parameters = Symbol.(data["parameters"])
 
@@ -113,7 +118,7 @@ function parse_mcsys(filename::String)::MuSystem
         latexnames[Symbol(k)] = String(v)
     end
 
-    return MuSystem(name, coords, parameters, functions, equations, displayfunctions, latexnames)
+    return MuSystem(info, coords, parameters, functions, equations, displayfunctions, latexnames)
 end
 
 function validate_symbols(coords, parameters, func_keys, eq_keys, disp_keys, latex_keys)

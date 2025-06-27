@@ -17,7 +17,7 @@ function get_all_systems()
 
     @info "Retrieved systems" systems = systems
     return HTTP.Response(200, JSON3.write(Dict(
-        "systems" => "hello"
+        "systems" => systems
     )))
 end
 

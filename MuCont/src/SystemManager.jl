@@ -19,7 +19,7 @@ function get_systems()
     assert_mucont_folder()
     files = readdir(MUCONT_FOLDER[])
 
-    systems = SystemParser.MuSystemBasic[]
+    systems = SystemParser.MuSystemInfo[]
     for file in files
          
         if endswith(file, ".mcsys")
