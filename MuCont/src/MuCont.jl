@@ -26,8 +26,8 @@ function demo_system_cont(compiled_system)
     # compiled_system = SystemParser.compile_system(model)
     @info "Compiled system" model = compiled_system.model.name ncoords = compiled_system.ncoords nparams = compiled_system.nparams
 
-    p = [0, 1, 0.5, 0.5]
-    x0 = [1, 0.5]
+    p = [1, 1, 0.5, 0.5]
+    x0 = [2, 0.5]
     tspan = (0.0, 300.0)
 
 
@@ -47,10 +47,10 @@ function demo_system_cont(compiled_system)
     # equilibrium
     eq = union(last_x, p[1])
     f = y -> compiled_system.f(y[1:end-1], [y[end], p[2:end]])
-    Jac = y -> compiled_system.Total_Diff_out(union(y, p))
+    Jac = y -> compiled_system.Total_Diff(union(y, p))
 
     # curve = ContinuationNewton.continuate_newton(f, eq, 50) # not working with numerical Jacobian
-    curve = ContinuationNewton.continuate_newton(f, eq, 50, Jac)
+    curve = ContinuationNewton.continuate_newton(f, eq, 50, nothing, 0.01)
 
     return curve
 end

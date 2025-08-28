@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MuCont.Desktop.Helpers;
-public static class ServiceHelper
+public static class ApiServiceHelper
 {
 
     public static string Join(params object[] values)

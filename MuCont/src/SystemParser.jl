@@ -4,9 +4,9 @@ using JSON3
 using Symbolics
 
 struct MuSystemInfo
-    id::String
     name::String
-    
+    file::String
+
 end
 
 struct MuSystem
@@ -47,9 +47,9 @@ end
 function get_system_basic_info(filename::String)
     data = JSON3.read(filename)
     id = filename
-    name = String(data["name"])
+    name = data["name"]
 
-    return MuSystemInfo(id,name)
+    return MuSystemInfo(name, filename)
 end
 
 # TODO rewrite as get_system_basic_info(data), the file handeling done by some interface.
@@ -161,4 +161,25 @@ function validate_symbols(coords, parameters, func_keys, eq_keys, disp_keys, lat
         end
     end
 end
+
+
+function convert_new_system_to_json(data)
+
+    # TODO: Validate data structure, e.g., the euqtions make sense.
+    # Convert to MuSystem and write to file
+    system = Dict(
+        "name" => data["name"],
+        "equations" => data["equations"],
+        "variables" => data["variables"],
+        "parameters" => data["parameters"]
+    )
+
+
+
+    file = JSON3.write(system)
+    # file = JSON3.pretty(system)
+
+    return file
+end
+
 end # module

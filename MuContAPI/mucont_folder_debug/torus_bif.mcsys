@@ -1,0 +1,21 @@
+{
+  "name": "torus_bif",
+  "coordinates": ["x", "y", "dx","dy"],
+  "parameters": [ "gamma", "b", "delta", "kappa"],
+  "functions": [],
+  "equations": [
+    ["x", "dx"],
+    ["dx", "-x  - delta * x^2 * dx  - gamma*x^3  - a * x*y"],
+    ["y", "dy"],
+    ["dy", "-4*y  - kappa*dy  - b*x^2"]                        
+  ],
+  "displayfunctions": [
+    
+  ],
+  "latexnaming": {
+    "x": "x",
+    "y": "y",
+    "delta": "\\delta",
+    "kappa": "\\kappa"
+  }
+}

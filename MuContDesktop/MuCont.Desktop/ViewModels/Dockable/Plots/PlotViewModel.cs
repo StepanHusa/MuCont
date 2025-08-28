@@ -1,4 +1,7 @@
-﻿using Dock.Model.Mvvm.Controls;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Dock.Model.Mvvm.Controls;
+using MuCont.Desktop.Services.ApiServices.SystemsService;
 using OxyPlot;
 using OxyPlot.Series;
 using System;
@@ -9,11 +12,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MuCont.Desktop.ViewModels.Dockable.Plots;
-internal class PlotViewModel : Tool
+internal partial class PlotViewModel : Tool
 {
     public PlotModel PlotModel { get; set; }
-    public ObservableCollection<string> AvailableCurves { get; set; } = new();
-    public ObservableCollection<string> SelectedCurves { get; set; } = new();
+    [ObservableProperty]
+    private ObservableCollection<SelectableCurve> availableCurves = new();
+
+    public IEnumerable<SelectableCurve> SelectedCurves => AvailableCurves
+        .Where(sc => sc.IsSelected);
 
     public PlotViewModel()
     {
@@ -23,17 +29,23 @@ internal class PlotViewModel : Tool
         InitializeSampleData();
 
         // Refresh plot when selected curves change
-        SelectedCurves.CollectionChanged += (s, e) => UpdatePlot();
+        //SelectedCurves.CollectionChanged += (s, e) => UpdatePlot()
     }
 
     private void InitializeSampleData()
     {
         // Example data
-        AvailableCurves.Add("Curve 1");
-        AvailableCurves.Add("Curve 2");
-        AvailableCurves.Add("Curve 3");
+        AvailableCurves.Add(new SelectableCurve { Id = "Curve 1" , IsSelected = true});
+        AvailableCurves.Add(new SelectableCurve { Id = "Curve 2" , IsSelected = true });
+        AvailableCurves.Add(new SelectableCurve { Id = "Curve 3" });
 
-        SelectedCurves.Add("Curve 1"); // Default selected curve
+        //SelectedCurves.Add("Curve 1"); // Default selected curve
+        UpdatePlot();
+    }
+
+    [RelayCommand]
+    private void OnRedraw()
+    {
         UpdatePlot();
     }
 
@@ -44,11 +56,11 @@ internal class PlotViewModel : Tool
         // Add only selected curves
         foreach (var curve in SelectedCurves)
         {
-            if (curve == "Curve 1")
+            if (curve.Id == "Curve 1")
                 PlotModel.Series.Add(CreateLineSeries("Curve 1", x => x, x => x));
-            if (curve == "Curve 2")
+            if (curve.Id == "Curve 2")
                 PlotModel.Series.Add(CreateLineSeries("Curve 2", x => x, x => x * x));
-            if (curve == "Curve 3")
+            if (curve.Id == "Curve 3")
                 PlotModel.Series.Add(CreateLineSeries("Curve 3", x => x, x => x * x * x));
         }
 
@@ -59,11 +71,19 @@ internal class PlotViewModel : Tool
     {
         var series = new LineSeries { Title = title };
 
-        for (double x = -10; x <= 10; x += 0.1)
+        for (double x = -1; x <= 1; x += 0.1)
         {
             series.Points.Add(new DataPoint(xFunc(x), yFunc(x)));
         }
 
         return series;
     }
+}
+
+internal partial class SelectableCurve : ObservableObject
+{
+    public string Id { get; init; }
+
+    [ObservableProperty]
+    private bool isSelected;
 }

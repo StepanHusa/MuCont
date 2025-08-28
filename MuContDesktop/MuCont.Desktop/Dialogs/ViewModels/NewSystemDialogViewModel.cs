@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive.Linq;
 using MuCont.Desktop.FormsGenerator;
+using System.Threading.Tasks;
 
 namespace MuCont.Desktop.Dialogs.ViewModels;
 internal partial class NewSystemDialogViewModel(ISystemService systemService) : ObservableObject, IDialogViewModel<bool>
@@ -16,10 +17,18 @@ internal partial class NewSystemDialogViewModel(ISystemService systemService) : 
     private NewSystemPost _newSystem = new NewSystemPost();
     private readonly ISystemService systemService = systemService;
 
+    [ObservableProperty]
+    private string _errorMessage = string.Empty;
+
     [RelayCommand]
-    public void OnSave()
+    public async Task OnSaveAsync()
     {
-        systemService.PostNewService(NewSystem);
+        var result = await systemService.PostNewService(NewSystem);
+        if (result is null)
+        {
+            ErrorMessage = "Could not save the system.";
+            return;
+        }
 
         OnClose(true);
     }   

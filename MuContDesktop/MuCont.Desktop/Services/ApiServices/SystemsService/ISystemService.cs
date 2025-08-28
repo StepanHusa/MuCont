@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 namespace MuCont.Desktop.Services.ApiServices.SystemsService;
 internal interface ISystemService
 {
-    Task<IEnumerable<SystemModel>?> GetSystems();
+    Task<SystemsDto?> GetSystems();
     Task<SystemModel?> PostNewService(NewSystemPost post);
 }

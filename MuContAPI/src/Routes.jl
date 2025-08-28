@@ -30,9 +30,20 @@ function register_routes()
         return Handlers.get_job_status(id)
     end
 
-    register(:GET, "get_systems") do req
+    register(:GET, "systems") do req
         return Handlers.get_all_systems()
     end
+
+    register(:GET, "demo_continuation") do req
+        return Handlers.demo_continuation()
+    end
+
+    register(:POST, "systems/new") do req
+        data = JSON3.read(String(req.body))
+        Handlers.post_new_system(data)
+        return HTTP.Response(200, "OK")
+    end
+
 
     # register(:GET, "job_status") do req
     #     query = HTTP.URIs.queryparams(HTTP.URI(req.target))

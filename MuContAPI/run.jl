@@ -4,4 +4,5 @@ using MuContAPI
 # ENV["MUCONT_API_CONFIG"] = "config/config.json"
 
 # Start the API server
+
 MuContAPI.main()

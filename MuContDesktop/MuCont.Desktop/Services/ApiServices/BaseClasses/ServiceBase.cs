@@ -18,11 +18,11 @@ public abstract class ServiceBase
         _basePath = basePath;
     }
     protected Task<T?> GetAsAsync<T>(string path)
-    => _apiClient.GetAsAsync<T>(ServiceHelper.Join(_basePath, path));
+    => _apiClient.GetAsAsync<T>(ApiServiceHelper.Join(_basePath, path));
 
     protected Task<T?> GetAsAsync<T>()
     => _apiClient.GetAsAsync<T>(_basePath);
 
     protected Task<TResponse?> PostAsAsync<TRequest, TResponse>(string path, TRequest requestData)
-    => _apiClient.PostAsAsync<TRequest, TResponse>(ServiceHelper.Join(_basePath, path), requestData);
+    => _apiClient.PostAsAsync<TRequest, TResponse>(ApiServiceHelper.Join(_basePath, path), requestData);
 }

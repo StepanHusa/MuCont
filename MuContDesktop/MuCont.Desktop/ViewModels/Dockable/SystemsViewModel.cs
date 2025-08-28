@@ -36,7 +36,25 @@ internal partial class SystemsViewModel(ISystemService systemService, IDialogSer
             return;
         }
 
-        Systems = new(systems);
+        
+        Systems = new(systems.Systems);
+    }
+
+    [ObservableProperty]
+    private SystemModel? selectedSystem;
+
+    [RelayCommand(CanExecute = nameof(CanLoadSelectedSystem))]
+    private async Task LoadSelectedSystemAsync()
+    {
+        if (SelectedSystem is null) return;
+
+        //await dialogService.ShowInfoDialog($"Loaded system: {SelectedSystem.Name}");
+        // or: await systemService.LoadSystem(SelectedSystem);
+    }
+
+    private bool CanLoadSelectedSystem()
+    {
+        return SelectedSystem != null;
     }
 }
 

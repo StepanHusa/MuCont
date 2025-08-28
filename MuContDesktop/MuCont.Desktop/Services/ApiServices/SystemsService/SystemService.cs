@@ -15,19 +15,24 @@ internal class SystemService: ServiceBase,ISystemService
         _apiClient = apiClient;
     }
 
-    public Task<IEnumerable<SystemModel>?> GetSystems()
-        => GetAsAsync<IEnumerable<SystemModel>>();
+    public Task<SystemsDto?> GetSystems()
+        => GetAsAsync<SystemsDto>();
 
     public Task<SystemModel?> PostNewService(NewSystemPost post)
         => PostAsAsync<NewSystemPost, SystemModel>("new", post);
 
 }
 
+public class SystemsDto
+{
+    public IEnumerable<SystemModel> Systems { get; set; } = null!;
+}
+
 public class SystemModel
 {
-    uint Id { get; set; }
-    string Name { get; set; }
-    string Describtion { get; set; }
+    //uint Id { get; set; }
+    public string Name { get; set; }
+    //string Describtion { get; set; }
     //IEnumerable<string> Info { get; set; }
     //IEnumerable<string> Notes { get; set; }
 

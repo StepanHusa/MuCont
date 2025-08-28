@@ -11,9 +11,9 @@
     x:DataType="vm:PlotViewModel"
     mc:Ignorable="d">
 
-	<Design.DataContext>
-		<vm:PlotViewModel />
-	</Design.DataContext>
+    <Design.DataContext>
+        <vm:PlotViewModel />
+    </Design.DataContext>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -22,13 +22,38 @@
         </Grid.ColumnDefinitions>
 
         <!--  Curve Selection  -->
+        <!--
         <ListBox
             Grid.Column="0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             ItemsSource="{Binding AvailableCurves}"
             SelectedItems="{Binding SelectedCurves}"
-            SelectionMode="Multiple" />
+            SelectionMode="Multiple" />-->
+        <StackPanel>
+            <Button Command="{Binding RedrawCommand}">
+                <TextBlock Text="Redraw" />
+            </Button>
+
+            <ItemsControl ItemsSource="{Binding AvailableCurves}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel
+                            Margin="4"
+                            Orientation="Horizontal">
+                            <CheckBox
+                                VerticalAlignment="Center"
+                                IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                            <TextBlock
+                                Margin="6,0,0,0"
+                                Text="{Binding Id}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+
 
         <!--  Plot View  -->
         <oxy:PlotView

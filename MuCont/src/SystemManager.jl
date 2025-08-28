@@ -21,11 +21,11 @@ function get_systems()
 
     systems = SystemParser.MuSystemInfo[]
     for file in files
-         
+
         if endswith(file, ".mcsys")
-            fullname =  joinpath(MUCONT_FOLDER[], file)
-            try 
-                s = SystemParser.get_system_basic_info(fullname)
+            fullname = joinpath(MUCONT_FOLDER[], file)
+            s = SystemParser.get_system_basic_info(fullname)
+            try
                 push!(systems, s)
             catch
                 @warn "Could not parse the file" file = fullname
@@ -34,6 +34,19 @@ function get_systems()
     end
 
     return systems
+end
+
+function write_new_system(data)
+    assert_mucont_folder()
+
+
+    filename = data["id"]
+    path = joinpath(MUCONT_FOLDER[], "$(filename).mcsys")
+
+
+    file = SystemParser.convert_new_system_to_json(data)
+
+    write(path, file)
 end
 
 end

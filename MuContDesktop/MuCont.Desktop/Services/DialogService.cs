@@ -88,5 +88,10 @@ internal class DialogService : IDialogService
     {
         await ShowIODialogAsync<ErrorDialogView,ErrorDialogViewModel,string,bool>(errorMessage);
     }
+
+    public async Task ShowGenericDialogAsync(GenericDialogConfig config)
+    {
+        await ShowIODialogAsync<GenericDialogView, GenericDialogViewModel, GenericDialogConfig, GenericDialogResult>(config);
+    }
 }
 

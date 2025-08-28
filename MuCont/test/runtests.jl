@@ -1,6 +1,8 @@
 import MuCont as cont
 using Test
 
+include("./testSystemParser.jl")
+
 function validate_results(results, expected_length, tol)
     @test typeof(results) == Vector{Float64}
     @test length(results) == expected_length
@@ -16,12 +18,7 @@ end
     @test cont.simple_computer_add(2, 3) == 5
 end
 
-@testset "Access to systems folder" begin
-    folder = joinpath(@__DIR__, "test_mcsys/")
-    cont.SystemManager.SetMuContFolder(folder)
-    systems = cont.SystemManager.get_systems()
-    @test length(systems) > 0
-end
+
 
 @testset "System Parser Tests" begin
     file = joinpath(@__DIR__, "test_mcsys/lv.mcsys")
@@ -67,8 +64,15 @@ end
     @test compiled_system isa cont.SystemParser.CompiledSystem
 end
 
+@testset "Access to systems folder" begin
+    folder = joinpath(@__DIR__, "test_mcsys/")
+    cont.SystemManager.SetMuContFolder(folder)
+    systems = cont.SystemManager.get_systems()
+    @test length(systems) > 0
+end
+
 @testset "Continuation" begin
-    
+
 
     @test true
 end

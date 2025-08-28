@@ -10,6 +10,44 @@
     x:DataType="vm:StarterViewModel"
     mc:Ignorable="d">
     <Grid>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="20,0"
+                    Text="x" />
+                <TextBox />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="20,0"
+                    Text="y" />
+                <TextBox />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="20,0"
+                    Text="a" />
+                <TextBox />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="20,0"
+                    Text="b" />
+                <TextBox />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="20,0"
+                    Text="c" />
+                <TextBox />
+            </StackPanel>
+
+            <Button>
+                <TextBlock Text="Start Continuation" />
+            </Button>
+        </StackPanel>
+
+
 
         <!--<StackPanel>
             <TextBlock Text="Initial Point" />

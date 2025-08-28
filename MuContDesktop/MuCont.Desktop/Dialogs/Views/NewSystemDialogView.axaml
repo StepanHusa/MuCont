@@ -52,6 +52,7 @@
                 Margin="0,20,0,0"
                 Command="{Binding SaveCommand}"
                 Content="Save" />
+			<TextBlock Text="{Binding ErrorMessage}" Foreground="Red"/>
         </StackPanel>
     </Grid>
 </UserControl>
