@@ -9,9 +9,16 @@ using MuCont.Desktop.FormsGenerator;
 using System.Threading.Tasks;
 
 namespace MuCont.Desktop.Dialogs.ViewModels;
-internal partial class NewSystemDialogViewModel(ISystemService systemService) : ObservableObject, IDialogViewModel<bool>
+
+public class NewSystemData
 {
-    public Action<bool> OnClose { get; set; } = _ => { };
+    public NewSystemPost SystemPost { get; set; } = new();
+    public bool WasCreated { get; set; }
+}
+
+internal partial class NewSystemDialogViewModel(ISystemService systemService) : ObservableObject, IDialogViewModel<DialogResult<NewSystemData>>
+{
+    public Action<DialogResult<NewSystemData>?> OnClose { get; set; } = _ => { };
 
     [ObservableProperty]
     private NewSystemPost _newSystem = new NewSystemPost();
@@ -23,19 +30,38 @@ internal partial class NewSystemDialogViewModel(ISystemService systemService) : 
     [RelayCommand]
     public async Task OnSaveAsync()
     {
-        var result = await systemService.PostNewService(NewSystem);
-        if (result is null)
-        {
-            ErrorMessage = "Could not save the system.";
-            return;
-        }
+            var result = await systemService.PostNewService(NewSystem);
+            if (result is null)
+            {
+                ErrorMessage = "Could not save the system.";
+                // OnClose(DialogResult<NewSystemData>.Error("Could not save the system."));
+                return;
+            }
 
-        OnClose(true);
-    }   
+            var systemData = new NewSystemData
+            {
+                SystemPost = NewSystem, //TODO remove, we should return an object that is really in database
+                WasCreated = true
+            };
+            OnClose(DialogResult<NewSystemData>.Ok(systemData));
+
+    }
+
+    [RelayCommand]
+    public void OnCancel()
+    {
+        OnClose(DialogResult<NewSystemData>.Cancel());
+    }
+
+    [RelayCommand]
+    public void OnCloseDialog()
+    {
+        OnClose(DialogResult<NewSystemData>.Cancel());
+    }
 
 }
 
-public partial class NewSystemPost :ObservableObject
+public partial class NewSystemPost : ObservableObject
 {
     [ObservableProperty]
     [property: FormField("Full Name")]
@@ -43,7 +69,7 @@ public partial class NewSystemPost :ObservableObject
 
     [ObservableProperty]
     [property: FormField("Notes")]
-    private ObservableCollection<string> _notes = new() {"hello", "hha"};
+    private ObservableCollection<string> _notes = new() { "hello", "note2" };
 
 
 

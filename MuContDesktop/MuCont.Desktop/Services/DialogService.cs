@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MuCont.Desktop.Services;
+
 internal class DialogService : IDialogService
 {
     private readonly MainWindowViewModel mainWM;
@@ -21,9 +22,9 @@ internal class DialogService : IDialogService
         this.serviceProvider = serviceProvider;
     }
 
-    public async Task<TResult?> ShowDialogAsync<TView, TViewModel, TResult>()
+    public async Task<DialogResult<TResult>?> ShowDialogAsync<TView, TViewModel, TResult>()
         where TView : UserControl, new()
-        where TViewModel : class, IDialogViewModel<TResult>
+        where TViewModel : class, IDialogViewModel<DialogResult<TResult>>
     {
         var viewModel = serviceProvider.GetService(typeof(TViewModel)) as TViewModel;
 
@@ -39,22 +40,22 @@ internal class DialogService : IDialogService
 
         mainWM.ShowOverlay(view);
 
-        var tcs = new TaskCompletionSource<TResult?>();
+        var tcs = new TaskCompletionSource<DialogResult<TResult>?>();
 
-        var overlayViewModel = viewModel as IDialogViewModel<TResult>;
+        var overlayViewModel = viewModel as IDialogViewModel<DialogResult<TResult>>;
 
         overlayViewModel.OnClose = result =>
         {
             mainWM.HideOverlay();
             tcs.SetResult(result);
         };
-        // TODO make a native way to close the dialog
+
         return await tcs.Task;
     }
 
     public async Task<TResult?> ShowIODialogAsync<TView, TViewModel, TInput, TResult>(TInput input)
     where TView : UserControl, new()
-    where TViewModel : class, IDialogIOViewModel<TInput,TResult>
+    where TViewModel : class, IDialogIOViewModel<TInput, DialogResult<TResult>>
     {
         var viewModel = serviceProvider.GetService(typeof(TViewModel)) as TViewModel;
 
@@ -72,21 +73,21 @@ internal class DialogService : IDialogService
 
         var tcs = new TaskCompletionSource<TResult?>();
 
-        var overlayViewModel = viewModel as IDialogIOViewModel<TInput, TResult>;
+        var overlayViewModel = viewModel as IDialogIOViewModel<TInput, DialogResult<TResult>>;
 
         overlayViewModel.OnClose = result =>
         {
             mainWM.HideOverlay();
-            tcs.SetResult(result);
+            tcs.SetResult(result != null && result.Success ? result.Data : default(TResult));
         };
-        overlayViewModel.OnOpened(input); 
+        overlayViewModel.OnOpened(input);
 
         return await tcs.Task;
     }
 
     public async Task ShowErrorDialog(string errorMessage)
     {
-        await ShowIODialogAsync<ErrorDialogView,ErrorDialogViewModel,string,bool>(errorMessage);
+        await ShowIODialogAsync<ErrorDialogView, ErrorDialogViewModel, string, ErrorDialogData>(errorMessage);
     }
 
     public async Task ShowGenericDialogAsync(GenericDialogConfig config)
