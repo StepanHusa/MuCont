@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Tmds.DBus.Protocol;
 
 namespace MuCont.Desktop.Dialogs.ViewModels;
-internal partial class GenericDialogViewModel : ObservableObject, IDialogIOViewModel<GenericDialogConfig, GenericDialogResult>
+
+internal partial class GenericDialogViewModel : ObservableObject, IDialogIOViewModel<GenericDialogConfig, DialogResult<GenericDialogResult>>
 {
-    public string Title { get; set; } = "Error";
+    public string Title { get; set; } = "Dialog";
 
     [ObservableProperty]
     private string _message = string.Empty;
@@ -18,34 +18,43 @@ internal partial class GenericDialogViewModel : ObservableObject, IDialogIOViewM
     [ObservableProperty]
     private bool _isOnlyRead = true;
 
-    Action<GenericDialogResult?> IDialogIOViewModel<GenericDialogConfig, GenericDialogResult>.OnClose { get; set; } = _ => OnClose();  // this is not correct 
-
+    public Action<DialogResult<GenericDialogResult>?> OnClose { get; set; } = _ => { };
 
     public void OnOpened(GenericDialogConfig input)
     {
-    
-        Title = input.Title ?? string.Empty;
+        Title = input.Title ?? "Dialog";
         Message = input.Text ?? string.Empty;
         IsOnlyRead = input.IsOnlyRead;
     }
 
-    public static GenericDialogResult? OnClose()
+    [RelayCommand]
+    public void OnOk()
     {
-        return new GenericDialogResult
-        {
-            ClosedOk = true,
-        };
+        var result = new GenericDialogResult { ClosedOk = true };
+        OnClose(DialogResult<GenericDialogResult>.Ok(result));
+    }
+
+    [RelayCommand]
+    public void OnCancel()
+    {
+        OnClose(DialogResult<GenericDialogResult>.Cancel());
+    }
+
+    [RelayCommand]
+    public void OnCloseDialog()
+    {
+        OnClose(DialogResult<GenericDialogResult>.Cancel());
     }
 }
 
-internal class GenericDialogConfig
+public class GenericDialogConfig
 {
     public bool IsOnlyRead { get; set; } = true;
     public string? Text { get; set; } = null;
     public string? Title { get; set; } = null;
 }
 
-internal class GenericDialogResult
+public class GenericDialogResult
 {
     public bool ClosedOk { get; set; }
 }

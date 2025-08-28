@@ -56,11 +56,31 @@
                 Value="{Binding WindowHeight}" />
         </StackPanel>
 
-        <!--  Save Button  -->
-        <Button
+        <!--  Error Message  -->
+        <TextBlock
             Margin="0,10,0,0"
+            Foreground="Red"
+            IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+            Text="{Binding ErrorMessage}"
+            TextWrapping="Wrap" />
+
+        <!--  Button Panel  -->
+        <StackPanel
+            Margin="0,15,0,0"
             HorizontalAlignment="Right"
-            Command="{Binding SaveCommand}"
-            Content="Save" />
+            Orientation="Horizontal"
+            Spacing="10">
+            <Button
+                Command="{Binding ApplyCommand}"
+                Content="Apply" />
+            <Button
+                Command="{Binding SaveAndCloseCommand}"
+                Content="Save &amp; Close" />
+            <Button
+                Command="{Binding CancelCommand}"
+                Content="Cancel" />
+        </StackPanel>
+
+
     </StackPanel>
 </UserControl>

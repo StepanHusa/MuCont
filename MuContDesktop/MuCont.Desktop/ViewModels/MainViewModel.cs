@@ -13,6 +13,7 @@ using Prism.Events;
 using System.Threading.Tasks;
 
 namespace MuCont.Desktop.ViewModels;
+
 internal partial class MainViewModel : ObservableObject
 {
     private readonly IDockFactory? dockFactory;
@@ -30,7 +31,7 @@ internal partial class MainViewModel : ObservableObject
 
     public MainViewModel(IEventAggregator ea, IDialogService dialogService, IDockFactory dockFactory)
     {
-        
+
         _requestManager = new RequestManager(ea, "D:\\Systems", "julia");
 
 
@@ -60,17 +61,23 @@ internal partial class MainViewModel : ObservableObject
     [RelayCommand]
     private async Task OnOpenSettingsAsync()
     {
-        await dialogService.ShowDialogAsync<SettingsDialogView, SettingsDialogViewModel, bool>();
+        // Settings are now handled entirely within the SettingsDialogViewModel
+        // No need to process the result here since saving happens in the dialog
+        await dialogService.ShowDialogAsync<SettingsDialogView, SettingsDialogViewModel, SettingsData>();
     }
-
-
 
     [RelayCommand]
     private async Task OnNewSystemAsync()
     {
-        await dialogService.ShowDialogAsync<NewSystemDialogView, NewSystemDialogViewModel, bool>();
+        var result = await dialogService.ShowDialogAsync<NewSystemDialogView, NewSystemDialogViewModel, NewSystemData>();
 
-        _requestManager.RunTestTaskOnJulia();
+        if (result?.Success == true && result.Data?.WasCreated == true)
+        {
+            // System was created successfully
+            _requestManager.RunTestTaskOnJulia();
+        }
+        // Errors are handled within the dialog itself via ErrorMessage property
+        // Cancel case needs no special handling
     }
 
     [RelayCommand]

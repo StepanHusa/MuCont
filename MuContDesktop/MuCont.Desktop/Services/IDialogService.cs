@@ -7,11 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MuCont.Desktop.Services;
+
 public interface IDialogService
 {
-    Task<TResult?> ShowDialogAsync<TView, TViewModel, TResult>()
+    Task<DialogResult<TResult>?> ShowDialogAsync<TView, TViewModel, TResult>()
         where TView : UserControl, new()
-        where TViewModel : class, IDialogViewModel<TResult>;
+        where TViewModel : class, IDialogViewModel<DialogResult<TResult>>;
 
     Task ShowErrorDialog(string errorMessage);
 }
