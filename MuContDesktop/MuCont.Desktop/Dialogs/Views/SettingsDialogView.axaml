@@ -5,60 +5,285 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:MuCont.Desktop.Dialogs.ViewModels"
-    d:DesignHeight="450"
+    d:DesignHeight="600"
     d:DesignWidth="800"
     x:DataType="vm:SettingsDialogViewModel"
     mc:Ignorable="d">
-    <StackPanel Margin="10">
+    
+    <Grid RowDefinitions="Auto,*,Auto,Auto">
+        <!-- Header -->
         <TextBlock
-            Margin="0,0,0,10"
+            Grid.Row="0"
+            Margin="20,20,20,10"
             FontSize="20"
+            FontWeight="Bold"
             Text="Settings" />
 
-        <!--  Theme Setting  -->
-        <StackPanel
-            Margin="0,5"
-            Orientation="Horizontal">
-            <TextBlock
-                Width="100"
-                VerticalAlignment="Center"
-                Text="Theme:" />
-            <!--<ComboBox
-                Items="{Binding Themes}"
-                SelectedItem="{Binding SelectedTheme}" />-->
-        </StackPanel>
+        <!-- Tab Control -->
+        <TabControl Grid.Row="1" Margin="20,0" SelectedIndex="{Binding SelectedTabIndex}">
+            
+            <!-- Startup Settings Tab -->
+            <TabItem Header="Startup">
+                <ScrollViewer>
+                    <StackPanel Margin="10" Spacing="15">
+                        
+                        <!--  Theme Setting  -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Theme" FontWeight="SemiBold" />
+                            <ComboBox
+                                MinWidth="200"
+                                SelectedItem="{Binding SelectedTheme}">
+                                <ComboBoxItem Content="Light" />
+                                <ComboBoxItem Content="Dark" />
+                                <ComboBoxItem Content="System" />
+                            </ComboBox>
+                        </StackPanel>
 
-        <!--  Window Width Setting  -->
-        <StackPanel
-            Margin="0,5"
-            Orientation="Horizontal">
-            <TextBlock
-                Width="100"
-                VerticalAlignment="Center"
-                Text="Window Width:" />
-            <NumericUpDown
-                Maximum="1920"
-                Minimum="400"
-                Value="{Binding WindowWidth}" />
-        </StackPanel>
+                        <!--  Start Maximized Setting  -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Window Settings" FontWeight="SemiBold" />
+                            <CheckBox
+                                Content="Start maximized"
+                                IsChecked="{Binding StartMaximized}" />
+                        </StackPanel>
 
-        <!--  Window Height Setting  -->
-        <StackPanel
-            Margin="0,5"
-            Orientation="Horizontal">
-            <TextBlock
-                Width="100"
-                VerticalAlignment="Center"
-                Text="Window Height:" />
-            <NumericUpDown
-                Maximum="1080"
-                Minimum="300"
-                Value="{Binding WindowHeight}" />
-        </StackPanel>
+                        <!--  Last Project Setting  -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Project Settings" FontWeight="SemiBold" />
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="Last opened project:" VerticalAlignment="Center" />
+                                <TextBlock 
+                                    Text="{Binding LastProject}" 
+                                    VerticalAlignment="Center"
+                                    FontStyle="Italic"
+                                    Foreground="{DynamicResource SystemAccentColor}" />
+                            </StackPanel>
+                        </StackPanel>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- API Settings Tab -->
+            <TabItem Header="API">
+                <ScrollViewer>
+                    <StackPanel Margin="10" Spacing="15">
+                        
+                        <!--  Local API Setting  -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Computation API" FontWeight="SemiBold" />
+                            <CheckBox
+                                Content="Use local API"
+                                IsChecked="{Binding UseLocalApi}" />
+                            <TextBlock 
+                                Text="When enabled, the application will start and use a local computation API instance."
+                                FontSize="12"
+                                Foreground="{DynamicResource SystemBaseMediumColor}"
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+
+                        <!--  API Address Setting  -->
+                        <StackPanel Spacing="5" IsEnabled="{Binding !UseLocalApi}">
+                            <TextBlock Text="Remote API Address" FontWeight="SemiBold" />
+                            <TextBox
+                                Text="{Binding ApiAddress}"
+                                MinWidth="300"
+                                Watermark="http://localhost:5000" />
+                            <TextBlock 
+                                Text="Specify the address of the remote computation API when not using local API."
+                                FontSize="12"
+                                Foreground="{DynamicResource SystemBaseMediumColor}"
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Paths Tab -->
+            <TabItem Header="Paths">
+                <ScrollViewer>
+                    <StackPanel Margin="10" Spacing="15">
+                        
+                        <!--  Path Info Summary  -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="System Information" FontWeight="SemiBold" />
+                            <StackPanel Orientation="Horizontal" Spacing="20">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock Text="Platform:" FontWeight="Medium" />
+                                    <TextBlock Text="{Binding PathInfo.Platform}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock Text="Custom Path:" FontWeight="Medium" />
+                                    <TextBlock Text="{Binding PathInfo.IsUsingCustomPath}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!--  Base Config Directory  -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Base Config Directory" FontWeight="SemiBold" />
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Border
+                                    MinWidth="400"
+                                    Background="{DynamicResource TextControlBackground}"
+                                    BorderBrush="{DynamicResource TextControlBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    Padding="8,6">
+                                    <TextBlock
+                                        Text="{Binding BaseConfigDirectory}"
+                                        VerticalAlignment="Center"
+                                        TextWrapping="Wrap" />
+                                </Border>
+                                <Button
+                                    Command="{Binding CopyBaseConfigDirectoryCommand}"
+                                    Content="Copy" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!--  Desktop Module Directory  -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Desktop Module Directory" FontWeight="SemiBold" />
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Border
+                                    MinWidth="400"
+                                    Background="{DynamicResource TextControlBackground}"
+                                    BorderBrush="{DynamicResource TextControlBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    Padding="8,6">
+                                    <TextBlock
+                                        Text="{Binding DesktopModuleDirectory}"
+                                        VerticalAlignment="Center"
+                                        TextWrapping="Wrap" />
+                                </Border>
+                                <Button
+                                    Command="{Binding CopyDesktopModuleDirectoryCommand}"
+                                    Content="Copy" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!--  Settings Directory  -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Settings Directory" FontWeight="SemiBold" />
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Border
+                                    MinWidth="400"
+                                    Background="{DynamicResource TextControlBackground}"
+                                    BorderBrush="{DynamicResource TextControlBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    Padding="8,6">
+                                    <TextBlock
+                                        Text="{Binding SettingsDirectory}"
+                                        VerticalAlignment="Center"
+                                        TextWrapping="Wrap" />
+                                </Border>
+                                <Button
+                                    Command="{Binding CopySettingsDirectoryCommand}"
+                                    Content="Copy" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!--  Log Directory  -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Log Directory" FontWeight="SemiBold" />
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Border
+                                    MinWidth="400"
+                                    Background="{DynamicResource TextControlBackground}"
+                                    BorderBrush="{DynamicResource TextControlBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    Padding="8,6">
+                                    <TextBlock
+                                        Text="{Binding LogFolderPath}"
+                                        VerticalAlignment="Center"
+                                        TextWrapping="Wrap" />
+                                </Border>
+                                <Button
+                                    Command="{Binding CopyLogFolderPathCommand}"
+                                    Content="Copy" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!--  Cache Directory  -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Cache Directory" FontWeight="SemiBold" />
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Border
+                                    MinWidth="400"
+                                    Background="{DynamicResource TextControlBackground}"
+                                    BorderBrush="{DynamicResource TextControlBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    Padding="8,6">
+                                    <TextBlock
+                                        Text="{Binding CacheDirectory}"
+                                        VerticalAlignment="Center"
+                                        TextWrapping="Wrap" />
+                                </Border>
+                                <Button
+                                    Command="{Binding CopyCacheDirectoryCommand}"
+                                    Content="Copy" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!--  Temp Directory  -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Temp Directory" FontWeight="SemiBold" />
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Border
+                                    MinWidth="400"
+                                    Background="{DynamicResource TextControlBackground}"
+                                    BorderBrush="{DynamicResource TextControlBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    Padding="8,6">
+                                    <TextBlock
+                                        Text="{Binding TempDirectory}"
+                                        VerticalAlignment="Center"
+                                        TextWrapping="Wrap" />
+                                </Border>
+                                <Button
+                                    Command="{Binding CopyTempDirectoryCommand}"
+                                    Content="Copy" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!--  Application Directory  -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Application Directory" FontWeight="SemiBold" />
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Border
+                                    MinWidth="400"
+                                    Background="{DynamicResource TextControlBackground}"
+                                    BorderBrush="{DynamicResource TextControlBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    Padding="8,6">
+                                    <TextBlock
+                                        Text="{Binding ApplicationDirectory}"
+                                        VerticalAlignment="Center"
+                                        TextWrapping="Wrap" />
+                                </Border>
+                                <Button
+                                    Command="{Binding CopyApplicationDirectoryCommand}"
+                                    Content="Copy" />
+                            </StackPanel>
+                        </StackPanel>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+        </TabControl>
 
         <!--  Error Message  -->
         <TextBlock
-            Margin="0,10,0,0"
+            Grid.Row="2"
+            Margin="20,10"
             Foreground="Red"
             IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
             Text="{Binding ErrorMessage}"
@@ -66,7 +291,8 @@
 
         <!--  Button Panel  -->
         <StackPanel
-            Margin="0,15,0,0"
+            Grid.Row="3"
+            Margin="20"
             HorizontalAlignment="Right"
             Orientation="Horizontal"
             Spacing="10">
@@ -81,6 +307,5 @@
                 Content="Cancel" />
         </StackPanel>
 
-
-    </StackPanel>
+    </Grid>
 </UserControl>
