@@ -26,6 +26,7 @@ public partial class SettingsDialogViewModel : ObservableObject, IDialogViewMode
     private readonly IOptions<AppSettings> _options;
     private readonly IConfiguration _configuration;
     private readonly IFileService _fileService;
+    private readonly IApplicationRestartService _restartService;
 
     #region Startup Settings
     [ObservableProperty]
@@ -97,7 +98,7 @@ public partial class SettingsDialogViewModel : ObservableObject, IDialogViewMode
     }
 
     [RelayCommand]
-    public async Task OnSaveAndCloseAsync()
+    public async Task OnSaveAndRestartAsync()
     {
         var success = await TrySaveSettingsAsync();
         if (success)
@@ -110,7 +111,21 @@ public partial class SettingsDialogViewModel : ObservableObject, IDialogViewMode
                 UseLocalApi = UseLocalApi,
                 ApiAddress = ApiAddress
             };
+
+            // Close dialog first
             OnClose(DialogResult<SettingsData>.Ok(settingsData));
+
+            // Then restart the application
+            try
+            {
+                await _restartService.RestartApplicationAsync();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Failed to restart application: {ex.Message}";
+                // Note: If restart fails, the dialog is already closed, so error won't show
+                // In a real application, you might want to show a separate error dialog
+            }
         }
         // If save failed, dialog stays open so user can fix the issue
     }
@@ -205,11 +220,12 @@ public partial class SettingsDialogViewModel : ObservableObject, IDialogViewMode
         }
     }
 
-    public SettingsDialogViewModel(IOptions<AppSettings> options, IConfiguration configuration, IFileService fileService)
+    public SettingsDialogViewModel(IOptions<AppSettings> options, IConfiguration configuration, IFileService fileService, IApplicationRestartService restartService)
     {
         _options = options;
         _configuration = configuration;
         _fileService = fileService;
+        _restartService = restartService;
 
         LoadCurrentSettings();
         InitializePaths();

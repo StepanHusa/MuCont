@@ -300,8 +300,8 @@
                 Command="{Binding ApplyCommand}"
                 Content="Apply" />
             <Button
-                Command="{Binding SaveAndCloseCommand}"
-                Content="Save &amp; Close" />
+                Command="{Binding SaveAndRestartCommand}"
+                Content="Save &amp; Restart" />
             <Button
                 Command="{Binding CancelCommand}"
                 Content="Cancel" />

@@ -71,6 +71,9 @@ public static class Startup
         // File Service
         services.AddSingleton<IFileService, FileService>();
 
+        // Application Services
+        services.AddSingleton<IApplicationRestartService, ApplicationRestartService>();
+
         // Other
         services.AddSingleton<IDialogService, DialogService>();
 
